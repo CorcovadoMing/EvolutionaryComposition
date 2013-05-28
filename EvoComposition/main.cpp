@@ -4,7 +4,7 @@
 #include "GeneticAlgorithm.h"
 #include "windows.h"
 
-void execute(const Music& music)
+void execute(const Music& music ,int tempo)
 {
     std::size_t sizeOfBar = music.sizeOfBar();
     for (std::size_t idxMusic = 0; idxMusic < sizeOfBar; ++idxMusic) {
@@ -16,7 +16,7 @@ void execute(const Music& music)
             for (std::size_t idxBeat = 0; idxBeat < sizeOfSound; ++idxBeat) {
 
                 Beep(music[idxMusic][idxBar][idxBeat].frequency,
-                     music[idxMusic][idxBar][idxBeat].duration);
+                     music[idxMusic][idxBar][idxBeat].duration * 60 / tempo);
             }
         }
     }
@@ -44,7 +44,7 @@ int main()
 	
     algo.run();
 	
-    execute(algo.individual(0));
+    execute(algo.individual(0) ,tempo);
 	
     return EXIT_SUCCESS;
 }
