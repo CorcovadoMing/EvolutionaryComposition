@@ -6,6 +6,10 @@
 
 void execute(const Music& music ,int tempo)
 {
+	FILE *fp;
+	fp = fopen("Music.txt" ,"w+");// output file
+	fprintf(fp ,"%d\n" ,tempo);
+
     std::size_t sizeOfBar = music.sizeOfBar();
     for (std::size_t idxMusic = 0; idxMusic < sizeOfBar; ++idxMusic) {
 
@@ -17,10 +21,14 @@ void execute(const Music& music ,int tempo)
 
                 Beep(music[idxMusic][idxBar][idxBeat].frequency,
                      music[idxMusic][idxBar][idxBeat].duration * 60 / tempo);
+
+				fprintf(fp ,"%d %d " ,music[idxMusic][idxBar][idxBeat].frequency 
+					,music[idxMusic][idxBar][idxBeat].duration * 60 / tempo);
             }
         }
     }
 
+	fclose(fp);
 }
 
 int main()
@@ -45,6 +53,8 @@ int main()
     algo.run();
 	
     execute(algo.individual(0) ,tempo);
+
+	system("pause");
 	
     return EXIT_SUCCESS;
 }
