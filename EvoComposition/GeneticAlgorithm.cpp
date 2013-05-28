@@ -12,7 +12,7 @@ GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
     : problem_(problem),
       population_size_(population_size), max_generation_(max_generation)
 {
-    std::srand(std::time(NULL));
+    std::srand((unsigned int)std::time(NULL));
 }
 
 void
@@ -29,6 +29,7 @@ GeneticAlgorithm::run()
         crossover();
         mutation();
 
+		sort();
         ++generation;
     }
 }
@@ -67,12 +68,39 @@ GeneticAlgorithm::crossover()
 void
 GeneticAlgorithm::mutation()
 {
-    // mutate first note in first bar
+    // mutate a random note in a random bar
     for (std::size_t idx = 0; idx < population_.size(); ++idx) {
-        Sound sound = population_[idx][0][0][0];
-        sound = problem_.changeFreqOfPitch(sound); // mutation rate = 1.0
+		if((double)(rand() % 10000) / 10000 < 0.01){// mutation rate = 0.01
+			int x = rand() % population_[idx].sizeOfBar() ,y = rand() % population_[idx][x].sizeOfBeat() 
+				,z = rand() % population_[idx][x][y].sizeOfSound();
+		
+			Sound sound = population_[idx][x][y][z];
+		
+			sound = problem_.changeFreqOfPitch(sound); 
+        
         // if sound is must to be repair
         // ......
-        population_[idx][0][0][0] = sound;
+			population_[idx][x][y][z] = sound;
+		}
     }
+}
+
+
+
+
+
+
+
+void GeneticAlgorithm::sort(){
+	unsigned int i = 0 ,j = 0;
+	Music m;
+	for (i = 1;i < population_.size() - 1;i++){
+		m = population_[i];
+		j = i - 1;
+		while (j >= 0 && population_[j].degree_of_sounds_good() > m.degree_of_sounds_good()){
+			population_[j + 1] = population_[j];
+			j--;
+		}
+		population_[j + 1] = m;
+	}
 }

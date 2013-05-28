@@ -34,14 +34,17 @@ int main()
                   total_num_bar, tempo);
 
 
-    const int population_size = 1,
-              max_generation = 1;
+    //const int population_size = 1,
+              //max_generation = 1;
 
+	const int population_size = 10,
+              max_generation = 1000;
+	
     GeneticAlgorithm algo(c, population_size, max_generation);
-
+	
     algo.run();
-
+	
     execute(algo.individual(0));
-
+	
     return EXIT_SUCCESS;
 }

@@ -34,6 +34,8 @@ private:
     void crossover();
     void mutation();
     void repair();
+	
+	void sort();
 };
 
 #endif // GENETICALGORITHM_H
