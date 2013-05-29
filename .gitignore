@@ -3,6 +3,7 @@
 #################
 
 *.layout
+*.depend
 
 # Build results
 bin/

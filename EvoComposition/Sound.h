@@ -10,14 +10,13 @@ struct Sound
     Sound(int frequency, int duration)
         : frequency(frequency), duration(duration) {}
 
-
     // the standard frequency and duration of a note
     static const int STD_FREQ_PITCH = 440; // A: 440 Hz
     static const int STD_DUR_BEAT = 1000; // 1000 millisecond
 
-
     int frequency; // in hertz
     int duration; // in millisecond
+
 };
 
 class Beat
@@ -36,7 +35,7 @@ public:
     std::size_t sizeOfSound() const { return sounds_.size(); }
 
 
-    // operator []
+    // operator
     Sound& operator[] (std::size_t idx)
     {
         return const_cast<Sound &>(static_cast<const Beat &>(*this)[idx]);
@@ -45,6 +44,7 @@ public:
     {
         return sounds_[idx];
     }
+
 private:
     std::vector<Sound> sounds_;
 };
@@ -65,7 +65,7 @@ public:
     std::size_t sizeOfBeat() const { return beats_.size(); }
 
 
-    // operator []
+    // operator
     Beat& operator[] (std::size_t idx)
     {
         return const_cast<Beat &>(static_cast<const Bar &>(*this)[idx]);
@@ -74,6 +74,7 @@ public:
     {
         return beats_[idx];
     }
+
 private:
     std::vector<Beat> beats_;
 };
@@ -101,7 +102,7 @@ public:
     int degree_of_sounds_good() const { return degree_of_sounds_good_; }
 
 
-    // operator []
+    // operator
     Bar& operator[] (std::size_t idx)
     {
         return const_cast<Bar &>(static_cast<const Music &>(*this)[idx]);
@@ -110,6 +111,7 @@ public:
     {
         return bars_[idx];
     }
+
 private:
     std::vector<Bar> bars_;
 

@@ -6,8 +6,8 @@
 class Composition
 {
 public:
-    Composition(int beats_per_bar, int note_value,
-                int total_num_bar, int tempo);
+    Composition(int beats_per_bar = 4, int note_value = 4,
+                int total_num_bar = 12, int tempo = 120);
 
     /**
      *  All operations below are related to Evolutionary Algorithm.
