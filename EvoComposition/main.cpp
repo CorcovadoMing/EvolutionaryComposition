@@ -3,41 +3,12 @@
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
 
-<<<<<<< HEAD
 void execute(const Music&, const int&);
 /*DO NOT CHANGE THIS THREE FUNC*/
 void gPyHeader(FILE *, const int&);
 void gPyBody(FILE *, const double&, const double&);
 void gPyFooter(FILE *);
 /*DO NOT CHANGE THIS THREE FUNC*/
-=======
-void execute(const Music& music ,int tempo)
-{
-	FILE *fp;
-	fp = fopen("Music.txt" ,"w+");// output file
-	fprintf(fp ,"%d\n" ,tempo);
-
-    std::size_t sizeOfBar = music.sizeOfBar();
-    for (std::size_t idxMusic = 0; idxMusic < sizeOfBar; ++idxMusic) {
-
-        std::size_t sizeOfBeat = music[idxMusic].sizeOfBeat();
-        for (std::size_t idxBar = 0; idxBar < sizeOfBeat; ++idxBar) {
-
-            std::size_t sizeOfSound = music[idxMusic][idxBar].sizeOfSound();
-            for (std::size_t idxBeat = 0; idxBeat < sizeOfSound; ++idxBeat) {
-
-                Beep(music[idxMusic][idxBar][idxBeat].frequency,
-                     music[idxMusic][idxBar][idxBeat].duration * 60 / tempo);
-
-				fprintf(fp ,"%d %d " ,music[idxMusic][idxBar][idxBeat].frequency 
-					,music[idxMusic][idxBar][idxBeat].duration * 60 / tempo);
-            }
-        }
-    }
-
-	fclose(fp);
-}
->>>>>>> ac8eb56127788aaeefff6f4c32286be3ff6c2ac8
 
 int main()
 {
@@ -60,13 +31,6 @@ int main()
     algo.run();
 	
     execute(algo.individual(0) ,tempo);
-<<<<<<< HEAD
-    
-=======
-
-	system("pause");
-	
->>>>>>> ac8eb56127788aaeefff6f4c32286be3ff6c2ac8
     return EXIT_SUCCESS;
 }
 

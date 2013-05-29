@@ -92,11 +92,7 @@ GeneticAlgorithm::sort(){
 	for (i = 1;i < population_.size();i++){
 		m = population_[i];
 		j = i - 1;
-<<<<<<< HEAD
 		while (j && population_[j].degree_of_sounds_good() < m.degree_of_sounds_good()){
-=======
-		while (j >= 0 && population_[j].degree_of_sounds_good() < m.degree_of_sounds_good()){
->>>>>>> ac8eb56127788aaeefff6f4c32286be3ff6c2ac8
 			population_[j + 1] = population_[j];
 			j--;
 		}
