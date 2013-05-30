@@ -195,19 +195,14 @@ GeneticAlgorithm::mutation()
     }
 }
 
-
-
-
-
-
-
-void GeneticAlgorithm::sort(){
+void
+GeneticAlgorithm::sort(){
 	unsigned int i = 0 ,j = 0;
 	Music m;
-	for (i = 1;i < population_.size() - 1;i++){
+	for (i = 1;i < population_.size();i++){
 		m = population_[i];
 		j = i - 1;
-		while (j >= 0 && population_[j].degree_of_sounds_good() > m.degree_of_sounds_good()){
+		while (j && population_[j].degree_of_sounds_good() < m.degree_of_sounds_good()){
 			population_[j + 1] = population_[j];
 			j--;
 		}
