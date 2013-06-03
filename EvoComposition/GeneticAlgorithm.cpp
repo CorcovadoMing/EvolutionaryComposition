@@ -179,8 +179,7 @@ GeneticAlgorithm::mutation()
 {
     // mutate a random note in a random bar
     for (std::size_t idx = 0; idx < population_.size(); ++idx) {
-        // mutation rate = 0.01
-        if((double)(rand() % 10000) / 10000 < 0.01){
+        if((double)rand() / (RAND_MAX + 1) < 0.01){// mutation rate = 0.01
 
             int x = rand() % population_[idx].sizeOfBar(),
                 y = rand() % population_[idx][x].sizeOfBeat(),
