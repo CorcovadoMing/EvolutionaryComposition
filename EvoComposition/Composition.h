@@ -7,7 +7,7 @@ class Composition
 {
 public:
     Composition(int beats_per_bar = 4, int note_value = 4,
-                int total_num_bar = 12, int tempo = 120);
+                int total_num_bar = 12, int tempo = 60);
 
     /**
      *  All operations below are related to Evolutionary Algorithm.
@@ -52,13 +52,13 @@ public:
      * 3
      * 4 means three quarter-note beats per bar.
      */
-    const int BEATS_PER_BAR; // 3
-    const int NOTE_VALUE; // 4
+    int BEATS_PER_BAR; // 3
+    int NOTE_VALUE; // 4
 
     // https://en.wikipedia.org/wiki/Bar_(music)
-    const int TOTAL_NUMBER_BAR; // 12
+    int TOTAL_NUMBER_BAR; // 12
     // https://en.wikipedia.org/wiki/Tempo
-    const int TEMPO;
+    int TEMPO;
 
 
     // the table of Frequency of Pitch in hertz.

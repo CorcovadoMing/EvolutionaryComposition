@@ -10,11 +10,31 @@
 #include "Sound.h"
 #include "GeneticAlgorithm.h"
 
+GeneticAlgorithm::GeneticAlgorithm()
+    : problem_(),
+      max_generation_(1000),
+      population_size_(10),
+      population_()
+{
+}
+
 GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
-                                   int population_size, int max_generation,
+                                   int max_generation,
+                                   int population_size)
+    : problem_(problem),
+      max_generation_(max_generation),
+      population_size_(population_size),
+      population_()
+{
+    std::srand((unsigned int)std::time(NULL));
+}
+
+GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
+                                   int max_generation,
                                    const std::vector<Music>& population)
     : problem_(problem),
-      population_size_(population_size), max_generation_(max_generation),
+      max_generation_(max_generation),
+      population_size_(population.size()),
       population_(population)
 {
     std::srand((unsigned int)std::time(NULL));
@@ -24,10 +44,12 @@ void
 GeneticAlgorithm::run()
 {
     // Create initial population
-    population_ = createInitialPopulation(population_size_);
+    if (population_.size() == 0) {
+        population_ = createInitialPopulation(population_size_);
+    }
+
     // The current generation
     int generation = 0;
-
     // Do the max of generation times
     while (generation < max_generation_) {
 
@@ -167,7 +189,7 @@ GeneticAlgorithm::crossover()
 
     // exchange first note of 3rd beat in every bar
     for (std::size_t barIdx = 0;
-         barIdx < parent[0].sizeOfBar() && barIdx < parent[1].sizeOfBar();
+         barIdx < parent[0].num_bar() && barIdx < parent[1].num_bar();
          ++barIdx) {
 
         std::swap(parent[0][barIdx][2][0], parent[1][barIdx][2][0]);
@@ -181,9 +203,9 @@ GeneticAlgorithm::mutation()
     for (std::size_t idx = 0; idx < population_.size(); ++idx) {
         if((double)rand() / (RAND_MAX + 1) < 0.01){// mutation rate = 0.01
 
-            int x = rand() % population_[idx].sizeOfBar(),
-                y = rand() % population_[idx][x].sizeOfBeat(),
-                z = rand() % population_[idx][x][y].sizeOfSound();
+            int x = rand() % population_[idx].num_bar(),
+                y = rand() % population_[idx][x].num_beat(),
+                z = rand() % population_[idx][x][y].num_sound();
 
 			Sound sound = population_[idx][x][y][z];
 

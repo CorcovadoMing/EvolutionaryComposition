@@ -10,9 +10,15 @@
 class GeneticAlgorithm
 {
 public:
+    GeneticAlgorithm();
+
     GeneticAlgorithm(const Composition& problem,
-                     int population_size, int max_generation,
-                     const std::vector<Music>& population = std::vector<Music>());
+                     int max_generation,
+                     int population_size);
+
+    GeneticAlgorithm(const Composition& problem,
+                     int max_generation,
+                     const std::vector<Music>& population);
 
     void run();
 
@@ -26,9 +32,9 @@ public:
 
 private:
     Composition problem_;
-    int population_size_;
     int max_generation_;
 
+    int population_size_;
     std::vector<Music> population_;
 
 

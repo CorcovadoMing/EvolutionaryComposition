@@ -34,9 +34,12 @@
 		</Compiler>
 		<Unit filename="EvoComposition/Composition.cpp" />
 		<Unit filename="EvoComposition/Composition.h" />
+		<Unit filename="EvoComposition/CompositionIO.h" />
 		<Unit filename="EvoComposition/GeneticAlgorithm.cpp" />
 		<Unit filename="EvoComposition/GeneticAlgorithm.h" />
+		<Unit filename="EvoComposition/Sound.cpp" />
 		<Unit filename="EvoComposition/Sound.h" />
+		<Unit filename="EvoComposition/SoundIO.h" />
 		<Unit filename="EvoComposition/main.cpp" />
 		<Extensions>
 			<code_completion />
