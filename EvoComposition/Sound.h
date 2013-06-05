@@ -4,112 +4,118 @@
 #include <vector>
 #include <cstddef>
 
-struct Sound
-{
-    Sound() : frequency(STD_FREQ_PITCH), duration(STD_DUR_BEAT) {}
-    Sound(int frequency, int duration)
-        : frequency(frequency), duration(duration) {}
+/**
+ *  Sound
+ */
 
+class Sound
+{
+public:
+    Sound();
+    Sound(int frequency, int duration);
 
     // the standard frequency and duration of a note
-    static const int STD_FREQ_PITCH = 440; // A: 440 Hz
-    static const int STD_DUR_BEAT = 1000; // 1000 millisecond
+    static const int STD_FREQ_PITCH;    // A: 440 Hz
+    static const int STD_DUR_BEAT;    // 1000 millisecond
 
+    void set_frequency(int frequency) { frequency_ = frequency; }
+    void set_duration(int duration) { duration_ = duration; }
 
-    int frequency; // in hertz
-    int duration; // in millisecond
+    // getter
+    int frequency() const { return frequency_; }
+    int duration() const { return duration_; }
+
+private:
+    int frequency_;    // in hertz
+    int duration_;    // in millisecond
 };
+
+/**
+ *  Beat
+ */
 
 class Beat
 {
 public:
-    Beat() : sounds_() {}
-    Beat(std::size_t num_sounds) { sounds_.reserve(num_sounds); }
-    Beat(const std::vector<Sound>& soundlist) : sounds_(soundlist) {}
+    Beat();
+    Beat(std::size_t num_sounds);
+    Beat(const std::vector<Sound>& soundlist);
 
 
-    // Add a Beat into Bar
-    void addSound(const Sound& sound) { sounds_.push_back(sound); }
+    // Add a Sound into Beat
+    void add_sound(const Sound& sound);
+
+    // Access specified Sound
+    Sound& operator[] (std::size_t idx);
+    const Sound& operator[] (std::size_t idx) const;
 
 
     // how many Sounds in this Beat
-    std::size_t sizeOfSound() const { return sounds_.size(); }
+    std::size_t num_sound() const { return sounds_.size(); }
 
-
-    // operator []
-    Sound& operator[] (std::size_t idx)
-    {
-        return const_cast<Sound &>(static_cast<const Beat &>(*this)[idx]);
-    }
-    const Sound& operator[] (std::size_t idx) const
-    {
-        return sounds_[idx];
-    }
 private:
     std::vector<Sound> sounds_;
 };
 
+/**
+ *  Bar
+ */
+
 class Bar
 {
 public:
-    Bar() : beats_() {}
-    Bar(std::size_t num_beats) { beats_.reserve(num_beats); }
-    Bar(const std::vector<Beat>& beatlist) : beats_(beatlist) {}
+    Bar();
+    Bar(std::size_t num_beats);
+    Bar(const std::vector<Beat>& beatlist);
 
 
     // Add a Beat into Bar
-    void addBeat(const Beat& beat) { beats_.push_back(beat); }
+    void add_beat(const Beat& beat);
 
+    // Access specified Beat
+    Beat& operator[] (std::size_t idx);
+    const Beat& operator[] (std::size_t idx) const;
 
     // how many Beats in this Bar
-    std::size_t sizeOfBeat() const { return beats_.size(); }
+    std::size_t num_beat() const { return beats_.size(); }
 
-
-    // operator []
-    Beat& operator[] (std::size_t idx)
-    {
-        return const_cast<Beat &>(static_cast<const Bar &>(*this)[idx]);
-    }
-    const Beat& operator[] (std::size_t idx) const
-    {
-        return beats_[idx];
-    }
 private:
     std::vector<Beat> beats_;
 };
 
+/**
+ *  Music
+ */
+
 class Music
 {
 public:
-    Music() : bars_(), degree_of_sounds_good_(0) {}
-    Music(std::size_t num_bars) { bars_.reserve(num_bars); }
-    Music(const std::vector<Bar>& barlist) : bars_(barlist) {}
+    Music();
+    Music(std::size_t num_bars);
+    Music(const std::vector<Bar>& barlist);
 
 
     // Add a Bar into Music
-    void addBar(const Bar& bar) { bars_.push_back(bar); }
+    void add_bar(const Bar& bar);
+
+    // Access specified Bar
+    Bar& operator[] (std::size_t idx);
+    const Bar& operator[] (std::size_t idx) const;
+
     // Set the degree of sounds good
-    void setDegreeOfSoundsGood(int degree)
-    {
-        degree_of_sounds_good_ = degree;
-    }
+    void set_degree_of_sounds_good(int degree);
 
 
     // How many Bars in this Music
-    std::size_t sizeOfBar() const { return bars_.size(); }
+    std::size_t num_bar() const { return bars_.size(); }
+
     // Get the degree of sounds good
     int degree_of_sounds_good() const { return degree_of_sounds_good_; }
 
 
-    // operator []
-    Bar& operator[] (std::size_t idx)
-    {
-        return const_cast<Bar &>(static_cast<const Music &>(*this)[idx]);
-    }
-    const Bar& operator[] (std::size_t idx) const
-    {
-        return bars_[idx];
-    }
+    // listen to the Music
+    void listen() const;
+
 private:
     std::vector<Bar> bars_;
 

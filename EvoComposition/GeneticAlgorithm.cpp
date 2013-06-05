@@ -1,16 +1,41 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <fstream>
+#include <sstream>
 #include <cstdlib>
+#include <iostream>
 #include <algorithm>
 #include "Composition.h"
 #include "Sound.h"
 #include "GeneticAlgorithm.h"
 
+GeneticAlgorithm::GeneticAlgorithm()
+    : problem_(),
+      max_generation_(1000),
+      population_size_(0),
+      population_()
+{
+}
+
 GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
-                                   int population_size, int max_generation)
+                                   int max_generation,
+                                   int population_size)
     : problem_(problem),
-      population_size_(population_size), max_generation_(max_generation)
+      max_generation_(max_generation),
+      population_size_(population_size),
+      population_()
+{
+    std::srand((unsigned int)std::time(NULL));
+}
+
+GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
+                                   int max_generation,
+                                   const std::vector<Music>& population)
+    : problem_(problem),
+      max_generation_(max_generation),
+      population_size_(population.size()),
+      population_(population)
 {
     std::srand((unsigned int)std::time(NULL));
 }
@@ -18,14 +43,15 @@ GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
 void
 GeneticAlgorithm::run()
 {
-    // Create initial population
-    population_ = createInitialPopulation(population_size_);
+    // Create initial population if there is no any population
+    if (population_.size() == 0) {
+        population_ = create_initial_population(population_size_);
+    }
+
     // The current generation
     int generation = 0;
-
     // Do the max of generation times
     while (generation < max_generation_) {
-
         crossover();
         mutation();
 
@@ -35,13 +61,13 @@ GeneticAlgorithm::run()
 }
 
 std::vector<Music>
-GeneticAlgorithm::createInitialPopulation(int population_size)
+GeneticAlgorithm::create_initial_population(int population_size)
 {
     std::vector<Music> population;
     population.reserve(population_size);
 
     for (int i = 0; i < population_size; ++i) {
-        Music new_solution = problem_.createInitialSolution();
+        Music new_solution = problem_.create_initial_solution();
         population.push_back(new_solution);
     }
 
@@ -55,10 +81,10 @@ GeneticAlgorithm::crossover()
     Music parent[] =
         {population_[std::rand() % population_.size()],
          population_[std::rand() % population_.size()]};
-
+    //std::cout << population_.size() << std::endl;
     // exchange first note of 3rd beat in every bar
     for (std::size_t barIdx = 0;
-         barIdx < parent[0].sizeOfBar() && barIdx < parent[1].sizeOfBar();
+         barIdx < parent[0].num_bar() && barIdx < parent[1].num_bar();
          ++barIdx) {
 
         std::swap(parent[0][barIdx][2][0], parent[1][barIdx][2][0]);
@@ -70,16 +96,16 @@ GeneticAlgorithm::mutation()
 {
     // mutate a random note in a random bar
     for (std::size_t idx = 0; idx < population_.size(); ++idx) {
-		if((double)rand() / (RAND_MAX + 1) < 0.01){// mutation rate = 0.01
-			int x = rand() % population_[idx].sizeOfBar() ,y = rand() % population_[idx][x].sizeOfBeat() 
-				,z = rand() % population_[idx][x][y].sizeOfSound();
-		
+        if((double)rand() / (RAND_MAX + 1) < 0.01){// mutation rate = 0.01
+
+            int x = rand() % population_[idx].num_bar(),
+                y = rand() % population_[idx][x].num_beat(),
+                z = rand() % population_[idx][x][y].num_sound();
+
 			Sound sound = population_[idx][x][y][z];
-		
-			sound = problem_.changeFreqOfPitch(sound); 
-        
-        // if sound is must to be repair
-        // ......
+
+			sound = problem_.changeFreqOfPitch(sound);
+
 			population_[idx][x][y][z] = sound;
 		}
     }

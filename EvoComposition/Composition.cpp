@@ -60,7 +60,7 @@ Composition::Composition(int beats_per_bar, int note_value,
  */
 
 Music
-Composition::createInitialSolution() const
+Composition::create_initial_solution() const
 {
     Music music(TOTAL_NUMBER_BAR);
 
@@ -71,9 +71,9 @@ Composition::createInitialSolution() const
         for (int beatIdx = 0; beatIdx < BEATS_PER_BAR; ++beatIdx) {
             Beat beat = changePatternOfBeat(Sound());
             beat = changeFreqOfPitch(beat);
-            bar.addBeat(beat);
+            bar.add_beat(beat);
         }
-        music.addBar(bar);
+        music.add_bar(bar);
     }
 
     return music;
@@ -91,7 +91,7 @@ Composition::evaluateObjectiveValue(Music* music) const
     // calculate the fitness of the Music
     // here just assign 5 to all Music
     fitness = 5;
-    music->setDegreeOfSoundsGood(fitness);
+    music->set_degree_of_sounds_good(fitness);
     return fitness;
 }
 
@@ -107,10 +107,10 @@ Composition::changePatternOfBeat(const Sound& sound) const
 
     Beat beat(pattern);
 
-    for (std::size_t i = 0; i < beat.sizeOfSound(); ++i) {
+    for (std::size_t i = 0; i < beat.num_sound(); ++i) {
         // if it is not a rest note
-        if (beat[i].frequency != 0) {
-            beat[i].frequency = sound.frequency;
+        if (beat[i].frequency() != 0) {
+            beat[i].set_frequency(sound.frequency());
         }
     }
 
@@ -128,14 +128,14 @@ Sound
 Composition::changeFreqOfPitch(const Sound& sound) const
 {
     int rand = std::rand() % freq_of_pitch.size();
-    return Sound(freq_of_pitch[rand], sound.duration);
+    return Sound(freq_of_pitch[rand], sound.duration());
 }
 
 Beat
 Composition::changeFreqOfPitch(const Beat& beat) const
 {
     Beat b(beat);
-    for (std::size_t idx = 0; idx < b.sizeOfSound(); ++idx) {
+    for (std::size_t idx = 0; idx < b.num_sound(); ++idx) {
         b[idx] = changeFreqOfPitch(b[idx]);
     }
     return b;
@@ -145,7 +145,7 @@ Bar
 Composition::changeFreqOfPitch(const Bar& bar) const
 {
     Bar b(bar);
-    for (std::size_t idx = 0; idx < b.sizeOfBeat(); ++idx) {
+    for (std::size_t idx = 0; idx < b.num_beat(); ++idx) {
         b[idx] = changeFreqOfPitch(b[idx]);
     }
     return b;
@@ -155,7 +155,7 @@ Music
 Composition::changeFreqOfPitch(const Music& music) const
 {
     Music m(music);
-    for (std::size_t idx = 0; idx < m.sizeOfBar(); ++idx) {
+    for (std::size_t idx = 0; idx < m.num_bar(); ++idx) {
         m[idx] = changeFreqOfPitch(m[idx]);
     }
     return m;

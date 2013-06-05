@@ -10,32 +10,39 @@
 class GeneticAlgorithm
 {
 public:
-    GeneticAlgorithm(const Composition& problem,
-                     int population_size, int max_generation);
+    GeneticAlgorithm();
 
+    GeneticAlgorithm(const Composition& problem,
+                     int max_generation,
+                     int population_size);
+
+    GeneticAlgorithm(const Composition& problem,
+                     int max_generation,
+                     const std::vector<Music>& population);
 
     void run();
 
-
-    int populationSize() const { return population_size_; }
-    int maxGeneration() const { return max_generation_; }
+    const Composition& problem() const { return problem_; }
+    int population_size() const { return population_size_; }
+    int max_generation() const { return max_generation_; }
     Music individual(std::size_t idx) const { return population_[idx]; }
 
 private:
     Composition problem_;
-    int population_size_;
     int max_generation_;
 
+    int population_size_;
     std::vector<Music> population_;
 
 
-    std::vector<Music> createInitialPopulation(int population_size);
+    std::vector<Music> create_initial_population(int population_size);
 
     void crossover();
     void mutation();
     void repair();
-	
-	void sort();
+
+    void sort();
+
 };
 
 #endif // GENETICALGORITHM_H

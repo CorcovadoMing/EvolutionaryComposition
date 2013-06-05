@@ -1,8 +1,11 @@
+Music.txt
+
 #################
 ## CodeBlocks
 #################
 
 *.layout
+*.depend
 
 # Build results
 bin/
