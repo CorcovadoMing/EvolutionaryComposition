@@ -11,10 +11,10 @@ void readFromFile(GeneticAlgorithm* algo, int max_generation,
                   const std::string& file_name);
 void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo);
 
-void writeToPy(const Music& music, int tempo);
+void writeToPy(const GeneticAlgorithm& algo);
 /*DO NOT CHANGE THIS THREE FUNC*/
-void gPyHeader(FILE *, int);
-void gPyBody(FILE *, double, double);
+void gPyHeader(FILE *, const int&);
+void gPyBody(FILE *, const int&, const double&);
 void gPyFooter(FILE *);
 /*DO NOT CHANGE THIS THREE FUNC*/
 
@@ -57,6 +57,7 @@ int main()
     algo.run();
 
     outputToFile(music_file_name, algo);
+    writeToPy(algo);
 
     return EXIT_SUCCESS;
 }
@@ -105,37 +106,45 @@ void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo)
     }
 }
 
-void writeToPy(const Music& music, int tempo)
+void writeToPy(const GeneticAlgorithm& algo)
 {
-    FILE *fp;
-    fp = fopen("generatewave.py" ,"w+");  // output file
+	const char *filehead = "generatewave";
+	const char *filetype = ".py";
+	char *filename;
+	int nfile;
+	FILE *fp;
+	const int population_size = algo.population_size();
+	
+	for (int idx = 0; idx < population_size; ++idx) 
+	{
+		nfile = idx + 1;
+		sprintf(filename, "%s%d%s", filehead, nfile, filetype);
+		fp = fopen(filename, "w+");
+		Music music = algo.individual(idx);
+		
+    	//python script header generate
+    	gPyHeader(fp, algo.problem().TEMPO);
+    	std::size_t num_bar = music.num_bar();
+    	for (std::size_t idxMusic = 0; idxMusic < num_bar; ++idxMusic) {
 
-    /*python script header generate*/
-    gPyHeader(fp, tempo);
+        	std::size_t num_beat = music[idxMusic].num_beat();
+        	for (std::size_t idxBar = 0; idxBar < num_beat; ++idxBar) {
 
-    std::size_t num_bar = music.num_bar();
-    for (std::size_t idxMusic = 0; idxMusic < num_bar; ++idxMusic) {
-
-        std::size_t num_beat = music[idxMusic].num_beat();
-        for (std::size_t idxBar = 0; idxBar < num_beat; ++idxBar) {
-
-            std::size_t num_sound = music[idxMusic][idxBar].num_sound();
-            for (std::size_t idxBeat = 0; idxBeat < num_sound; ++idxBeat) {
-
-                gPyBody(fp,
+            	std::size_t num_sound = music[idxMusic][idxBar].num_sound();
+            	for (std::size_t idxBeat = 0; idxBeat < num_sound; ++idxBeat) {
+                	gPyBody(fp,
                         music[idxMusic][idxBar][idxBeat].frequency(),
                         music[idxMusic][idxBar][idxBeat].duration());
+                }
             }
         }
+        //python script footer generate
+    	gPyFooter(fp);
+    	fclose(fp);
     }
-
-    /*python script footer generate*/
-    gPyFooter(fp);
-
-    fclose(fp);
 }
 
-void gPyHeader(FILE *fp, int tempo)
+void gPyHeader(FILE *fp, const int& tempo)
 {
 	fprintf(fp, "from m_wave import *\n");
 	fprintf(fp, "from itertools import *\n");
@@ -147,9 +156,9 @@ void gPyHeader(FILE *fp, int tempo)
 	fprintf(fp, "def waves():\n\tl = int(44100*%f)\n\n\treturn chain(", (double)1/(tempo/60));
 }
 
-void gPyBody(FILE *fp, double freq, double dur)
+void gPyBody(FILE *fp, const int& freq, const double& dur)
 {
-	fprintf(fp, "islice(damped_wave(frequency=%f), l*%f),", freq, dur/1000);
+	fprintf(fp, "islice(damped_wave(frequency=%d), l*%f),", freq, dur/1000);
 }
 
 void gPyFooter(FILE *fp)
