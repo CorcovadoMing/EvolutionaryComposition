@@ -3,100 +3,67 @@
 
 #include <istream>
 #include <ostream>
-#include <sstream>
-#include "Sound.h"
+
+class Sound;
+class Beat;
+class Bar;
+class Music;
+
+/**
+ *  SoundIO
+ */
 
 class SoundIO
 {
 public:
 
-    static Music input_from(std::istream& is);
-    static void output_to(std::ostream& os, const Music& music);
+    static bool input_from(Sound *sound, std::istream& is);
+    static void output_to(std::ostream& os, const Sound& sound);
 
-    static const char sound_separator,
-                      beat_separator,
-                      bar_separator,
-                      music_separator;
+    static const char freq_dur_separator,
+                      separator;
 };
 
+/**
+ *  BeatIO
+ */
 
-const char SoundIO::sound_separator = ' ',
-           SoundIO::beat_separator = '\t',
-           SoundIO::bar_separator = '|',
-           SoundIO::music_separator = '\n';
-
-
-Music
-SoundIO::input_from(std::istream& is)
+class BeatIO
 {
-    Music music;
+public:
 
-    while (is.good()) {
-        // parse Music
-        std::string str_music;
-        std::getline(is, str_music, music_separator);
-        std::istringstream iss_music(str_music);
-        while (iss_music.good()) {
-            Bar bar;
+    static bool input_from(Beat *beat, std::istream& is);
+    static void output_to(std::ostream& os, const Beat& beat);
 
-            // parse Bar
-            std::string str_bar;
-            std::getline(iss_music, str_bar, bar_separator);
-            std::istringstream iss_bar(str_bar);
-            while (iss_bar.good()) {
-                Beat beat;
+    static const char separator;
+};
 
-                // parse Beat
-                std::string str_beat;
-                std::getline(iss_bar, str_beat, beat_separator);
-                std::istringstream iss_beat(str_beat);
-                while (iss_beat.good()) {
-                    Sound sound;
+/**
+ *  BarIO
+ */
 
-                    // parse Sound
-                    std::string str_frequency, str_duration;
-                    std::getline(iss_beat, str_frequency, sound_separator);
-                    std::getline(iss_beat, str_duration, sound_separator);
-                    std::istringstream iss_frequency(str_frequency),
-                                       iss_duration(str_duration);
-                    int frequency = 0, duration = 0;
-                    iss_frequency >> frequency;
-                    iss_duration >> duration;
-
-                    beat.add_sound(Sound(frequency, duration));
-                }
-                bar.add_beat(beat);
-            }
-            music.add_bar(bar);
-        }
-    }
-    return music;
-}
-
-void
-SoundIO::output_to(std::ostream& os, const Music& music)
+class BarIO
 {
-    std::size_t num_bar = music.num_bar();
-    for (std::size_t idxMusic = 0; idxMusic < num_bar; ++idxMusic) {
+public:
 
-        os << bar_separator;
+    static bool input_from(Bar *bar, std::istream& is);
+    static void output_to(std::ostream& os, const Bar& bar);
 
-        std::size_t num_beat = music[idxMusic].num_beat();
-        for (std::size_t idxBar = 0; idxBar < num_beat; ++idxBar) {
+    static const char separator;
+};
 
-            os << beat_separator;
+/**
+ *  MusicIO
+ */
 
-            std::size_t num_sound = music[idxMusic][idxBar].num_sound();
-            for (std::size_t idxBeat = 0; idxBeat < num_sound; ++idxBeat) {
+class MusicIO
+{
+public:
 
-                os << sound_separator <<
-                      music[idxMusic][idxBar][idxBeat].frequency() <<
-                      sound_separator <<
-                      music[idxMusic][idxBar][idxBeat].duration();
-            }
-        }
-    }
-    os << bar_separator << music_separator;
-}
+    static bool input_from(Music *music, std::istream& is);
+    static void output_to(std::ostream& os, const Music& music);
+
+    static const char separator;
+};
 
 #endif // SOUNDIO_H

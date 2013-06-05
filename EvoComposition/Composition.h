@@ -14,7 +14,7 @@ public:
      */
 
     // Create an initial solution.
-    Music createInitialSolution() const;
+    Music create_initial_solution() const;
     // Evaluate the fitness of an indivisual.
     // note that:
     //     EA may use both decision and objective value.

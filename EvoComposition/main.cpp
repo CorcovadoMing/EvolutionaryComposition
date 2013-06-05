@@ -31,9 +31,7 @@ int main()
     std::ifstream ifs(music_file_name.c_str());
     if (ifs.is_open()) {
         ifs.close();
-        std::cout << "read first" << std::endl;
         readFromFile(&algo, max_generation, music_file_name);
-        std::cout << "read second" << std::endl;
     }
     // if there have not music file, create one.
     else {
@@ -54,10 +52,10 @@ int main()
     // if you want to listen the music,
     // you can use the next code by specific index
     //algo.individual(0).listen();
-    std::cout << "run" << std::endl;
+
     // run the algorithm
     algo.run();
-    std::cout << "output" << std::endl;
+
     outputToFile(music_file_name, algo);
 
     return EXIT_SUCCESS;
@@ -70,14 +68,15 @@ void readFromFile(GeneticAlgorithm* algo, int max_generation,
     if (ifs.is_open()) {
         // read the information of problem
         Composition problem = CompositionIO::input_from(ifs);
-        std::cout << "Music" << std::endl;
+
         // read each Music
         std::vector<Music> population;
         while (ifs.good()) {
-            Music music = SoundIO::input_from(ifs);
-            population.push_back(music);
+            Music music;
+            if (MusicIO::input_from(&music, ifs)) {
+                population.push_back(music);
+            }
         }
-        std::cout << "set algorithm" << std::endl;
         // set algorithm
         *algo = GeneticAlgorithm(problem, max_generation, population);
     }
@@ -96,9 +95,9 @@ void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo)
         CompositionIO::output_to(ofs, problem);
 
         // output each Music
-        const int population_size = algo.populationSize();
+        const int population_size = algo.population_size();
         for (int idx = 0; idx < population_size; ++idx) {
-            SoundIO::output_to(ofs, algo.individual(idx));
+            MusicIO::output_to(ofs, algo.individual(idx));
         }
     }
     else {

@@ -60,7 +60,7 @@ Composition::Composition(int beats_per_bar, int note_value,
  */
 
 Music
-Composition::createInitialSolution() const
+Composition::create_initial_solution() const
 {
     Music music(TOTAL_NUMBER_BAR);
 

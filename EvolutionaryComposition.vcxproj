@@ -14,11 +14,15 @@
     <ClCompile Include="EvoComposition\Composition.cpp" />
     <ClCompile Include="EvoComposition\GeneticAlgorithm.cpp" />
     <ClCompile Include="EvoComposition\main.cpp" />
+    <ClCompile Include="EvoComposition\Sound.cpp" />
+    <ClCompile Include="EvoComposition\SoundIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EvoComposition\Composition.h" />
+    <ClInclude Include="EvoComposition\CompositionIO.h" />
     <ClInclude Include="EvoComposition\GeneticAlgorithm.h" />
     <ClInclude Include="EvoComposition\Sound.h" />
+    <ClInclude Include="EvoComposition\SoundIO.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9BA20A8E-598D-4E93-A2C2-8F25CCC2E3DD}</ProjectGuid>

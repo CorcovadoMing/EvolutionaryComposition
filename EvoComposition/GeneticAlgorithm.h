@@ -23,12 +23,9 @@ public:
     void run();
 
     const Composition& problem() const { return problem_; }
-    int populationSize() const { return population_size_; }
-    int maxGeneration() const { return max_generation_; }
+    int population_size() const { return population_size_; }
+    int max_generation() const { return max_generation_; }
     Music individual(std::size_t idx) const { return population_[idx]; }
-
-    //void readFromFile(const std::string& file_name);
-    //void outputToFile(const std::string& file_name) const;
 
 private:
     Composition problem_;
@@ -38,7 +35,7 @@ private:
     std::vector<Music> population_;
 
 
-    std::vector<Music> createInitialPopulation(int population_size);
+    std::vector<Music> create_initial_population(int population_size);
 
     void crossover();
     void mutation();
@@ -46,8 +43,6 @@ private:
 
     void sort();
 
-    //void readMusic(std::istream& is);
-    //void outputMusic(std::ostream& os, const Music& music) const;
 };
 
 #endif // GENETICALGORITHM_H

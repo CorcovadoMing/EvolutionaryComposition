@@ -13,7 +13,7 @@
 GeneticAlgorithm::GeneticAlgorithm()
     : problem_(),
       max_generation_(1000),
-      population_size_(10),
+      population_size_(0),
       population_()
 {
 }
@@ -43,16 +43,15 @@ GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
 void
 GeneticAlgorithm::run()
 {
-    // Create initial population
+    // Create initial population if there is no any population
     if (population_.size() == 0) {
-        population_ = createInitialPopulation(population_size_);
+        population_ = create_initial_population(population_size_);
     }
 
     // The current generation
     int generation = 0;
     // Do the max of generation times
     while (generation < max_generation_) {
-
         crossover();
         mutation();
 
@@ -61,118 +60,14 @@ GeneticAlgorithm::run()
     }
 }
 
-/*void
-GeneticAlgorithm::readFromFile(const std::string& file_name)
-{
-    std::ifstream ifs(file_name.c_str());
-    if (ifs.is_open()) {
-        // read the information of problem
-        int beats_per_bar = 0, note_value = 0,
-            total_num_bar = 0, tempo = 0;
-        ifs >> beats_per_bar >> note_value >> total_num_bar >> tempo;
-        problem_(Composition(beats_per_bar, note_value,
-                               total_num_bar, tempo));
-
-        // read each Music
-        int population_size = 0;
-        while (ifs.good()) {
-            readMusic(ifs);
-            ++population_size;
-        }
-        population_size_ = population_size;
-    }
-    else {
-        std::cout << "The input file is not be read." << std::endl;
-    }
-}
-
-void
-GeneticAlgorithm::outputToFile(const std::string& file_name) const
-{
-    std::ofstream ofs(file_name.c_str());
-    if (ofs.is_open()) {
-        // output the information of problem
-        ofs << problem_.BEATS_PER_BAR << " " << problem_.NOTE_VALUE << " " <<
-        problem_.TOTAL_NUMBER_BAR << " " << problem_.TEMPO << std::endl;
-
-        // output each Music
-        for (auto it = population_.begin(); it != population_.end(); ++it) {
-            outputMusic(ofs, *it);
-        }
-    }
-    else {
-        std::cout << "The onput file is not be written." << std::endl;
-    }
-}
-
-void
-GeneticAlgorithm::readMusic(std::istream& is)
-{
-    Music music;
-
-    // parse Music
-    std::string one_music;
-    std::getline(is, one_music);
-    std::istringstream iss_one_music(one_music);
-    while (iss_one_music.good()) {
-        Bar bar;
-
-        // parse Bar
-        std::string one_bar;
-        std::getline(iss_one_music, one_bar, '|');
-        std::istringstream iss_one_bar(one_bar);
-        while (iss_one_bar.good()) {
-            Beat beat;
-
-            // parse Beat
-            std::string one_beat;
-            std::getline(iss_one_bar, one_beat, '\t');
-            std::istringstream iss_one_beat(one_beat);
-            while (iss_one_beat.good()) {
-                // parse Sound
-                int frequency = 0, duration = 0;
-                iss_one_beat >> frequency >> duration;
-
-                beat.addSound(Sound(frequency, duration));
-            }
-            bar.addBeat(beat);
-        }
-        music.addBar(bar);
-    }
-}
-
-void
-GeneticAlgorithm::outputMusic(std::ostream& os, const Music& music) const
-{
-    std::size_t size_Bar = music.sizeOfBar();
-    for (std::size_t idxMusic = 0; idxMusic < size_Bar; ++idxMusic) {
-
-        os << "|";
-
-        std::size_t size_Beat = music[idxMusic].sizeOfBeat();
-        for (std::size_t idxBar = 0; idxBar < size_Beat; ++idxBar) {
-
-            os << '\t';
-
-            std::size_t size_Sound = music[idxMusic][idxBar].sizeOfSound();
-            for (std::size_t idxBeat = 0; idxBeat < size_Sound; ++idxBeat) {
-
-                os << " " << music[idxMusic][idxBar][idxBeat].frequency <<
-                " " << music[idxMusic][idxBar][idxBeat].duration;
-            }
-        }
-    }
-    os << "|" << std::endl;
-}*/
-
 std::vector<Music>
-GeneticAlgorithm::createInitialPopulation(int population_size)
+GeneticAlgorithm::create_initial_population(int population_size)
 {
     std::vector<Music> population;
     population.reserve(population_size);
 
     for (int i = 0; i < population_size; ++i) {
-        Music new_solution = problem_.createInitialSolution();
+        Music new_solution = problem_.create_initial_solution();
         population.push_back(new_solution);
     }
 
@@ -186,7 +81,7 @@ GeneticAlgorithm::crossover()
     Music parent[] =
         {population_[std::rand() % population_.size()],
          population_[std::rand() % population_.size()]};
-
+    //std::cout << population_.size() << std::endl;
     // exchange first note of 3rd beat in every bar
     for (std::size_t barIdx = 0;
          barIdx < parent[0].num_bar() && barIdx < parent[1].num_bar();

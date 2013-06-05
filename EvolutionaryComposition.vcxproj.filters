@@ -24,6 +24,12 @@
     <ClCompile Include="EvoComposition\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EvoComposition\Sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EvoComposition\SoundIO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EvoComposition\Composition.h">
@@ -33,6 +39,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EvoComposition\Sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EvoComposition\CompositionIO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EvoComposition\SoundIO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
