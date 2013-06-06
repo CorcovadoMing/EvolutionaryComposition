@@ -79,20 +79,15 @@ Composition::create_initial_solution() const
     return music;
 }
 
-//int
-//Composition::evaluateDecisionValue(Music* music) const
-//{
-//}
-
-int
-Composition::evaluateObjectiveValue(Music* music) const
+double Composition::evaluate_fitness_value(Music* music) const
 {
-    int fitness = 0;
-    // calculate the fitness of the Music
-    // here just assign 5 to all Music
-    fitness = 5;
-    music->set_degree_of_sounds_good(fitness);
-    return fitness;
+    int value = 0;
+    // calculate the fitness value of this Music
+
+
+
+    music->set_fitness_value(value);
+    return value;
 }
 
 /**

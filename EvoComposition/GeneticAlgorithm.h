@@ -39,6 +39,7 @@ private:
 
     void crossover();
     void mutation();
+    void selection();
     void repair();
 
     void sort();

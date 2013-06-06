@@ -54,8 +54,9 @@ GeneticAlgorithm::run()
     while (generation < max_generation_) {
         crossover();
         mutation();
+        selection();
 
-		sort();
+        sort();
         ++generation;
     }
 }
@@ -68,6 +69,7 @@ GeneticAlgorithm::create_initial_population(int population_size)
 
     for (int i = 0; i < population_size; ++i) {
         Music new_solution = problem_.create_initial_solution();
+        problem_.evaluate_fitness_value(&new_solution);
         population.push_back(new_solution);
     }
 
@@ -77,17 +79,36 @@ GeneticAlgorithm::create_initial_population(int population_size)
 void
 GeneticAlgorithm::crossover()
 {
-    // randomly select two parents
-    Music parent[] =
-        {population_[std::rand() % population_.size()],
-         population_[std::rand() % population_.size()]};
-    //std::cout << population_.size() << std::endl;
+    // two parent reproduce one children
+
+    // select two parents using 2-tournament
+    const int num_parent = 2;
+    std::vector<Music> parent(2);
+    for (int i = 0; i < num_parent; ++i) {
+        Music a = population_[std::rand() % population_.size()],
+              b = population_[std::rand() % population_.size()];
+
+        if (a.fitness_value() > b.fitness_value())
+            parent[i] = a;
+        else
+            parent[i] = b;
+    }
+
     // exchange first note of 3rd beat in every bar
     for (std::size_t barIdx = 0;
          barIdx < parent[0].num_bar() && barIdx < parent[1].num_bar();
          ++barIdx) {
 
         std::swap(parent[0][barIdx][2][0], parent[1][barIdx][2][0]);
+    }
+
+    // add to population
+    if (problem_.evaluate_fitness_value(&parent[0]) >
+        problem_.evaluate_fitness_value(&parent[1])) {
+        population_.push_back(parent[0]);
+    }
+    else {
+        population_.push_back(parent[1]);
     }
 }
 
@@ -112,13 +133,19 @@ GeneticAlgorithm::mutation()
 }
 
 void
+GeneticAlgorithm::selection()
+{
+
+}
+
+void
 GeneticAlgorithm::sort(){
 	unsigned int i = 0 ,j = 0;
 	Music m;
 	for (i = 1;i < population_.size();i++){
 		m = population_[i];
 		j = i - 1;
-		while (j && population_[j].degree_of_sounds_good() < m.degree_of_sounds_good()){
+		while (j && population_[j].fitness_value() < m.fitness_value()){
 			population_[j + 1] = population_[j];
 			j--;
 		}
