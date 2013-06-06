@@ -11,6 +11,7 @@ void readFromFile(GeneticAlgorithm* algo, int max_generation,
                   const std::string& file_name);
 void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo);
 
+std::string int2str(const int&);
 void writeToPy(const GeneticAlgorithm& algo);
 /*DO NOT CHANGE THIS THREE FUNC*/
 void gPyHeader(FILE *, const int&);
@@ -108,9 +109,9 @@ void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo)
 
 void writeToPy(const GeneticAlgorithm& algo)
 {
-	const char *filehead = "generatewave";
-	const char *filetype = ".py";
-	char *filename;
+	const std::string filehead = "generatewave";
+	const std::string filetype = ".py";
+	std::string filename;
 	int nfile;
 	FILE *fp;
 	const int population_size = algo.population_size();
@@ -118,8 +119,8 @@ void writeToPy(const GeneticAlgorithm& algo)
 	for (int idx = 0; idx < population_size; ++idx) 
 	{
 		nfile = idx + 1;
-		sprintf(filename, "%s%d%s", filehead, nfile, filetype);
-		fp = fopen(filename, "w+");
+		filename += filehead + int2str(nfile) + filetype;
+		fp = fopen(filename.c_str(), "w+");
 		Music music = algo.individual(idx);
 		
     	//python script header generate
@@ -167,4 +168,11 @@ void gPyFooter(FILE *fp)
 	fprintf(fp, ")\n\nchannels = ((waves(),), (waves(), white_noise(amplitude=0.001),))\n");
 	fprintf(fp, "samples = compute_samples(channels, None)\n");
 	fprintf(fp, "write_wavefile(sys.stdout, samples, None)\n");
+}
+
+std::string int2str(const int &i)
+{
+    std::stringstream stream;
+    stream << i;
+    return stream.str();
 }
