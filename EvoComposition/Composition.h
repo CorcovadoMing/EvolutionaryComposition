@@ -15,15 +15,9 @@ public:
 
     // Create an initial solution.
     Music create_initial_solution() const;
+
     // Evaluate the fitness of an indivisual.
-    // note that:
-    //     EA may use both decision and objective value.
-    //     For example, in Permutation Flow Shop Scheduling Problem,
-    //     makespan is refer to objective value, and the resemblance
-    //     to two PFSP solution is maybe refer to decision value.
-    //     If you use it, remeber to add a new variable to Music.
-    //int evaluateDecisionValue(Music* music) const;
-    int evaluateObjectiveValue(Music* music) const;
+    double evaluate_fitness_value(Music* music) const;
 
     /**
      *  All operations below are related to Composition.

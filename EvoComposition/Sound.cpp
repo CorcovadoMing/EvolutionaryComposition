@@ -96,7 +96,7 @@ const Beat& Bar::operator[] (std::size_t idx) const
  */
 
 Music::Music()
-    : bars_(), degree_of_sounds_good_(0)
+    : bars_(), fitness_value_(0)
 {
 }
 
@@ -125,9 +125,9 @@ const Bar& Music::operator[] (std::size_t idx) const
     return bars_[idx];
 }
 
-void Music::set_degree_of_sounds_good(int degree)
+void Music::set_fitness_value(int fitness_value)
 {
-    degree_of_sounds_good_ = degree;
+    fitness_value_ = fitness_value;
 }
 
 void Music::listen() const

@@ -102,15 +102,15 @@ public:
     Bar& operator[] (std::size_t idx);
     const Bar& operator[] (std::size_t idx) const;
 
-    // Set the degree of sounds good
-    void set_degree_of_sounds_good(int degree);
+    // Set the fitness
+    void set_fitness_value(int fitness_value);
 
 
     // How many Bars in this Music
     std::size_t num_bar() const { return bars_.size(); }
 
-    // Get the degree of sounds good
-    int degree_of_sounds_good() const { return degree_of_sounds_good_; }
+    // Get the fitness
+    int fitness_value() const { return fitness_value_; }
 
 
     // listen to the Music
@@ -119,7 +119,7 @@ public:
 private:
     std::vector<Bar> bars_;
 
-    int degree_of_sounds_good_;
+    double fitness_value_;  // the degree of sounds good
 };
 
 #endif // SOUND_H
