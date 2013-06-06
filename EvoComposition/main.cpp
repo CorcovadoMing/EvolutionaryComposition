@@ -111,7 +111,6 @@ void writeToPy(const GeneticAlgorithm& algo)
 {
 	const std::string filehead = "generatewave";
 	const std::string filetype = ".py";
-	std::string filename;
 	int nfile;
 	FILE *fp;
 	const int population_size = algo.population_size();
@@ -119,7 +118,7 @@ void writeToPy(const GeneticAlgorithm& algo)
 	for (int idx = 0; idx < population_size; ++idx) 
 	{
 		nfile = idx + 1;
-		filename += filehead + int2str(nfile) + filetype;
+		std::string filename = filehead + int2str(nfile) + filetype;
 		fp = fopen(filename.c_str(), "w+");
 		Music music = algo.individual(idx);
 		
