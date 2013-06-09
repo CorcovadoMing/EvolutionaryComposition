@@ -6,8 +6,8 @@
 
 
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-const std::vector<int> Composition::freq_of_pitch =
-    {262, 294, 330, 349, 392, 440, 494};
+const std::vector<float> Composition::freq_of_pitch =
+    {261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88};
 
 const std::vector< std::vector<Sound> > Composition::pattern_of_beat =
     {
@@ -22,9 +22,9 @@ const std::vector< std::vector<Sound> > Composition::pattern_of_beat =
          Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250)}
     };
 #else
-const int freq[] = {262, 294, 330, 349, 392, 440, 494};
+const float freq[] = {261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88};
 
-const std::vector<int>
+const std::vector<float>
 Composition::freq_of_pitch(freq, freq+sizeof(freq)/sizeof(freq[0]));
 
 Sound a1[] = {Sound(Sound::STD_FREQ_PITCH, 333),
@@ -79,11 +79,10 @@ Composition::create_initial_solution() const
     return music;
 }
 
-int Composition::evaluate_fitness_value(Music* music) const
+double Composition::evaluate_fitness_value(Music* music) const
 {
-    int value = 0;
+    double value = 0;
     // calculate the fitness value of this Music
-	
 
 
     music->set_fitness_value(value);

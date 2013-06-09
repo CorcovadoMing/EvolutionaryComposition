@@ -10,7 +10,7 @@
  *  Sound
  */
 
-const int Sound::STD_FREQ_PITCH = 440; // A: 440 Hz
+const float Sound::STD_FREQ_PITCH = 440.0; // A: 440 Hz
 const int Sound::STD_DUR_BEAT = 1000; // 1000 millisecond
 
 Sound::Sound()
@@ -18,7 +18,7 @@ Sound::Sound()
 {
 }
 
-Sound::Sound(int frequency, int duration)
+Sound::Sound(float frequency, int duration)
     : frequency_(frequency), duration_(duration)
 {
 }
@@ -125,7 +125,7 @@ const Bar& Music::operator[] (std::size_t idx) const
     return bars_[idx];
 }
 
-void Music::set_fitness_value(int fitness_value)
+void Music::set_fitness_value(double fitness_value)
 {
     fitness_value_ = fitness_value;
 }

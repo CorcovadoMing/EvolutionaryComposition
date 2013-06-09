@@ -17,7 +17,7 @@ public:
     Music create_initial_solution() const;
 
     // Evaluate the fitness of an indivisual.
-    int evaluate_fitness_value(Music* music) const;
+    double evaluate_fitness_value(Music* music) const;
 
     /**
      *  All operations below are related to Composition.
@@ -56,7 +56,7 @@ public:
 
 
     // the table of Frequency of Pitch in hertz.
-    static const std::vector<int> freq_of_pitch;
+    static const std::vector<float> freq_of_pitch;
 
     // the table of patterns of beat,
     // every patterns are summed up in 1000 millisecond.

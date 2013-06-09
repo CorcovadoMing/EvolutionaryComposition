@@ -12,21 +12,21 @@ class Sound
 {
 public:
     Sound();
-    Sound(int frequency, int duration);
+    Sound(float frequency, int duration);
 
     // the standard frequency and duration of a note
-    static const int STD_FREQ_PITCH;    // A: 440 Hz
+    static const float STD_FREQ_PITCH;    // A: 440 Hz
     static const int STD_DUR_BEAT;    // 1000 millisecond
 
-    void set_frequency(int frequency) { frequency_ = frequency; }
+    void set_frequency(float frequency) { frequency_ = frequency; }
     void set_duration(int duration) { duration_ = duration; }
 
     // getter
-    int frequency() const { return frequency_; }
+    float frequency() const { return frequency_; }
     int duration() const { return duration_; }
 
 private:
-    int frequency_;    // in hertz
+    float frequency_;    // in hertz
     int duration_;    // in millisecond
 };
 
@@ -103,14 +103,14 @@ public:
     const Bar& operator[] (std::size_t idx) const;
 
     // Set the fitness
-    void set_fitness_value(int fitness_value);
+    void set_fitness_value(double fitness_value);
 
 
     // How many Bars in this Music
     std::size_t num_bar() const { return bars_.size(); }
 
     // Get the fitness
-    int fitness_value() const { return fitness_value_; }
+    double fitness_value() const { return fitness_value_; }
 
 
     // listen to the Music
@@ -119,7 +119,7 @@ public:
 private:
     std::vector<Bar> bars_;
 
-    int fitness_value_;  // the degree of sounds good
+    double fitness_value_;  // the degree of sounds good
 };
 
 #endif // SOUND_H

@@ -78,7 +78,7 @@ GeneticAlgorithm::create_initial_population(int population_size)
 void
 GeneticAlgorithm::crossover()
 {
-    // two parent reproduce one children
+    // two parent reproduce two children
 
     // select two parents using 2-tournament
     const int num_parent = 2;
@@ -106,12 +106,8 @@ GeneticAlgorithm::crossover()
 	}
 
     // add to population
-    if (problem_.evaluate_fitness_value(&parent[0]) >
-        problem_.evaluate_fitness_value(&parent[1])) {
-        population_.push_back(parent[0]);
-    }
-    else {
-        population_.push_back(parent[1]);
+    for (int i = 0; i < num_parent; ++i) {
+        population_.push_back(parent[i]);
     }
 }
 
@@ -138,7 +134,9 @@ GeneticAlgorithm::mutation()
 void
 GeneticAlgorithm::selection()
 {
-	while(population_.size() > (unsigned int)population_size()){population_.pop_back();}
+    while(population_.size() > (unsigned int)population_size()) {
+        population_.pop_back();
+    }
 }
 
 void
