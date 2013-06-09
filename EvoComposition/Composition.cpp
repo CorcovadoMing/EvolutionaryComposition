@@ -79,11 +79,11 @@ Composition::create_initial_solution() const
     return music;
 }
 
-double Composition::evaluate_fitness_value(Music* music) const
+int Composition::evaluate_fitness_value(Music* music) const
 {
     int value = 0;
     // calculate the fitness value of this Music
-
+	
 
 
     music->set_fitness_value(value);

@@ -52,11 +52,10 @@ GeneticAlgorithm::run()
     int generation = 0;
     // Do the max of generation times
     while (generation < max_generation_) {
-        crossover();
+		crossover();
         mutation();
-        selection();
-
         sort();
+		selection();
         ++generation;
     }
 }
@@ -94,13 +93,17 @@ GeneticAlgorithm::crossover()
             parent[i] = b;
     }
 
-    // exchange first note of 3rd beat in every bar
-    for (std::size_t barIdx = 0;
-         barIdx < parent[0].num_bar() && barIdx < parent[1].num_bar();
-         ++barIdx) {
-
-        std::swap(parent[0][barIdx][2][0], parent[1][barIdx][2][0]);
-    }
+	// exchange first x - 1 bar and first y beat in NO.x bar
+	unsigned int x = rand() % parent[0].num_bar() ,y = rand() % parent[0][x].num_beat();
+	for (unsigned int i = 0; i < parent[0].num_bar(); ++i) {
+		if(i < x){
+			std::swap(parent[0][i], parent[1][i]);
+			continue;
+		}
+		for (unsigned int j = 0; j < parent[0][x].num_beat(); ++j) {
+			if(i == x && j <= y){std::swap(parent[0][i][j], parent[1][i][j]);}
+		}
+	}
 
     // add to population
     if (problem_.evaluate_fitness_value(&parent[0]) >
@@ -135,7 +138,7 @@ GeneticAlgorithm::mutation()
 void
 GeneticAlgorithm::selection()
 {
-
+	while(population_.size() > (unsigned int)population_size()){population_.pop_back();}
 }
 
 void

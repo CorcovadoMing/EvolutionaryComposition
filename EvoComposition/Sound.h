@@ -119,7 +119,7 @@ public:
 private:
     std::vector<Bar> bars_;
 
-    double fitness_value_;  // the degree of sounds good
+    int fitness_value_;  // the degree of sounds good
 };
 
 #endif // SOUND_H

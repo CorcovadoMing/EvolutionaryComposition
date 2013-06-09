@@ -17,7 +17,7 @@ public:
     Music create_initial_solution() const;
 
     // Evaluate the fitness of an indivisual.
-    double evaluate_fitness_value(Music* music) const;
+    int evaluate_fitness_value(Music* music) const;
 
     /**
      *  All operations below are related to Composition.
