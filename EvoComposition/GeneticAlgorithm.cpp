@@ -47,16 +47,17 @@ GeneticAlgorithm::run()
     if (population_.size() == 0) {
         population_ = create_initial_population(population_size_);
     }
-
+	
     // The current generation
     int generation = 0;
     // Do the max of generation times
+	for (int i = 0; i < population_size_; ++i) {problem_.evaluate_fitness_value(&population_[i]);}
     while (generation < max_generation_) {
 		crossover();
         mutation();
-        sort();
-		selection();
-        ++generation;
+        //sort();
+		//selection();
+		++generation;
     }
 }
 
@@ -80,18 +81,21 @@ GeneticAlgorithm::crossover()
 {
     // two parent reproduce two children
 
-    // select two parents using 2-tournament
+    // select random two parents
+	int a = 0 ,b = 0;
     const int num_parent = 2;
     std::vector<Music> parent(2);
-    for (int i = 0; i < num_parent; ++i) {
-        Music a = population_[std::rand() % population_.size()],
-              b = population_[std::rand() % population_.size()];
+    //for (int i = 0; i < num_parent; ++i) {
+		a = std::rand() % population_.size();
+		b = std::rand() % population_.size();
+        Music m1 = population_[a],
+              m2 = population_[b];
 
-        if (a.fitness_value() > b.fitness_value())
-            parent[i] = a;
-        else
-            parent[i] = b;
-    }
+        //if (m1.fitness_value() > m2.fitness_value())
+            parent[0] = m1;
+        //else
+            parent[1] = m2;
+    //}
 
 	// exchange first x - 1 bar and first y beat in NO.x bar
 	unsigned int x = rand() % parent[0].num_bar() ,y = rand() % parent[0][x].num_beat();
@@ -105,10 +109,20 @@ GeneticAlgorithm::crossover()
 		}
 	}
 
-    // add to population
-    for (int i = 0; i < num_parent; ++i) {
-        population_.push_back(parent[i]);
-    }
+	//may replace
+	for (int i = 0; i < num_parent; ++i) {problem_.evaluate_fitness_value(&parent[i]);}
+	if(x < parent[0].num_bar() / 2){
+		if(parent[0].fitness_value() > population_[a].fitness_value()){population_[a] = parent[0];}
+		if(parent[1].fitness_value() > population_[b].fitness_value()){population_[b] = parent[1];}
+	}
+	else{
+		if(parent[1].fitness_value() > population_[a].fitness_value()){population_[a] = parent[1];}
+		if(parent[0].fitness_value() > population_[b].fitness_value()){population_[b] = parent[0];}
+	}
+
+    //for (int i = 0; i < num_parent; ++i) {
+        //population_.push_back(parent[i]);
+    //}
 }
 
 void
@@ -141,12 +155,12 @@ GeneticAlgorithm::selection()
 
 void
 GeneticAlgorithm::sort(){
-	unsigned int i = 0 ,j = 0;
+	int i = 0 ,j = 0;
 	Music m;
 	for (i = 1;i < population_.size();i++){
 		m = population_[i];
 		j = i - 1;
-		while (j && population_[j].fitness_value() < m.fitness_value()){
+		while (j >= 0 && population_[j].fitness_value() < m.fitness_value()){
 			population_[j + 1] = population_[j];
 			j--;
 		}

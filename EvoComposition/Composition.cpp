@@ -82,7 +82,29 @@ Composition::create_initial_solution() const
 double Composition::evaluate_fitness_value(Music* music) const
 {
     double value = 0;
+	int avg_frequency[48] = {0} ,kind_of_duration[48] = {0};
     // calculate the fitness value of this Music
+	for(int i = 0;i < music[0].num_bar();++i){
+		for(int j = 0;j < music[0][i].num_beat();++j){
+			for(int k = 0;k < music[0][i][j].num_sound();++k){
+				avg_frequency[i * 4 + j] += music[0][i][j][k].frequency() * music[0][i][j][k].duration();
+			}
+			avg_frequency[i * 4 + j] /= 1000;
+			if(music[0][i][j][0].duration() == 333){kind_of_duration[i * 4 + j] = 1;}
+			else if(music[0][i][j][0].duration() == 750){kind_of_duration[i * 4 + j] = 2;}
+			else if(music[0][i][j][0].duration() == 250){kind_of_duration[i * 4 + j] = 4;}
+			else{
+				if(music[0][i][j][1].duration() == 166){kind_of_duration[i * 4 + j] = 3;}
+				else{kind_of_duration[i * 4 + j] = 5;}
+			}
+		}
+	}
+	for(int i = 0;i < 12 * 4 - 2;++i){
+		if(avg_frequency[i] != avg_frequency[i + 1]){value++;}
+		if(avg_frequency[i] != avg_frequency[i + 2]){value++;}
+		if(kind_of_duration[i] != kind_of_duration[i + 1]){value++;}
+		if(kind_of_duration[i] != kind_of_duration[i + 2]){value++;}
+	}
 
 
     music->set_fitness_value(value);
