@@ -51,7 +51,10 @@ GeneticAlgorithm::run()
     // The current generation
     int generation = 0;
     // Do the max of generation times
-	for (int i = 0; i < population_size_; ++i) {problem_.evaluate_fitness_value(&population_[i]);}
+	//for (int i = 0; i < population_size_; ++i) { problem_.evaluate_fitness_value(&population_[i]); }
+	
+	std::cout << problem_.pitchFitness(population_[0]) << std::endl;
+    
     while (generation < max_generation_) {
 		crossover();
         mutation();
@@ -69,7 +72,7 @@ GeneticAlgorithm::create_initial_population(int population_size)
 
     for (int i = 0; i < population_size; ++i) {
         Music new_solution = problem_.create_initial_solution();
-        problem_.evaluate_fitness_value(&new_solution);
+        //problem_.evaluate_fitness_value(&new_solution);
         population.push_back(new_solution);
     }
 
@@ -110,7 +113,7 @@ GeneticAlgorithm::crossover()
 	}
 
 	//may replace
-	for (int i = 0; i < num_parent; ++i) {problem_.evaluate_fitness_value(&parent[i]);}
+	for (int i = 0; i < num_parent; ++i) {/*problem_.evaluate_fitness_value(&parent[i])*/;}
 	if(x < parent[0].num_bar() / 2){
 		if(parent[0].fitness_value() > population_[a].fitness_value()){population_[a] = parent[0];}
 		if(parent[1].fitness_value() > population_[b].fitness_value()){population_[b] = parent[1];}

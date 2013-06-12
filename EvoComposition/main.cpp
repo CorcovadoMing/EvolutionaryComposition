@@ -15,7 +15,7 @@ std::string int2str(const int&);
 void writeToPy(const GeneticAlgorithm& algo);
 /*DO NOT CHANGE THIS THREE FUNC*/
 void gPyHeader(FILE *, const int&);
-void gPyBody(FILE *, const int&, const double&);
+void gPyBody(FILE *, const double&, const double&);
 void gPyFooter(FILE *);
 /*DO NOT CHANGE THIS THREE FUNC*/
 
@@ -156,9 +156,9 @@ void gPyHeader(FILE *fp, const int& tempo)
 	fprintf(fp, "def waves():\n\tl = int(44100*%f)\n\n\treturn chain(", (double)1/(tempo/60));
 }
 
-void gPyBody(FILE *fp, const int& freq, const double& dur)
+void gPyBody(FILE *fp, const double& freq, const double& dur)
 {
-	fprintf(fp, "islice(damped_wave(frequency=%d), l*%f),", freq, dur/1000);
+	fprintf(fp, "islice(damped_wave(frequency=%f), l*%f),", freq/2.0, dur/1000);
 }
 
 void gPyFooter(FILE *fp)
