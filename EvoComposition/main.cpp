@@ -3,20 +3,26 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <vector>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
 #include "SoundIO.h"
 #include "CompositionIO.h"
 
+
+
 void readFromFile(GeneticAlgorithm* algo, const std::string& file_name);
 void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo);
 
 std::string int2str(const int&);
+
 /*DO NOT CHANGE THIS THREE FUNC*/
+int dur2num( const int& );
+std::string note2name( const double& ); 
 void writeToPy(const GeneticAlgorithm& algo);
 void gPyHeader(FILE *, const int&);
 void gPyBody(FILE *, const double&, const double&);
-void gPyFooter(FILE *);
+void gPyFooter(FILE *, const int&);
 /*DO NOT CHANGE THIS THREE FUNC*/
 
 int main(int argc, char *argv[])
@@ -36,7 +42,7 @@ int main(int argc, char *argv[])
     }
     else if (argc >= 2 && argc <= 4) {
         for (int i = 2; i <= argc; ++i) {
-            std::istringstream iss(std::string(argv[i-1]));
+            std::istringstream iss(argv[i-1]);
             switch (i) {
             case 2:
                 iss >> elitism_individual;
@@ -68,7 +74,7 @@ int main(int argc, char *argv[])
         const int beats_per_bar = 4,
                   note_value = 4,
                   total_num_bar = 12,
-                  tempo = 60;
+                  tempo = 120;
 
         Composition problem(beats_per_bar, note_value,
                       total_num_bar, tempo);
@@ -169,34 +175,27 @@ void writeToPy(const GeneticAlgorithm& algo)
             }
         }
         //python script footer generate
-    	gPyFooter(fp);
+    	gPyFooter(fp, nfile);
     	fclose(fp);
     }
 }
 
 void gPyHeader(FILE *fp, const int& tempo)
 {
-	fprintf(fp, "from m_wave import *\n");
-	fprintf(fp, "from itertools import *\n");
-	fprintf(fp, "import sys\n\n");
-	//func def
-	fprintf(fp, "def ncycles(iterable, n):\n\treturn chain.from_iterable(repeat(tuple(iterable), n))\n\n");
-
-	//func def wave
-	fprintf(fp, "def waves():\n\tl = int(44100*%f)\n\n\treturn chain(", (double)1/(tempo/60));
+	fprintf(fp, "import pysynth\n\n");
+	fprintf(fp, "song = (");
 }
 
 void gPyBody(FILE *fp, const double& freq, const double& dur)
 {
-	fprintf(fp, "islice(damped_wave(frequency=%f), l*%f),", freq/2.0, dur/1000);
+	fprintf(fp, " ('%s', %d ),", note2name(freq).c_str(), dur2num(dur));
 }
 
-void gPyFooter(FILE *fp)
+void gPyFooter(FILE *fp, const int& fn)
 {
 	fseek(fp, -1, SEEK_CUR);
-	fprintf(fp, ")\n\nchannels = ((waves(),), (waves(), white_noise(amplitude=0.001),))\n");
-	fprintf(fp, "samples = compute_samples(channels, None)\n");
-	fprintf(fp, "write_wavefile(sys.stdout, samples, None)\n");
+	fprintf(fp, ")\n\n");
+	fprintf(fp, "pysynth.make_wav(song, pause = 0,fn = '%d.wav')\n", fn);
 }
 
 std::string int2str(const int &i)
@@ -205,3 +204,43 @@ std::string int2str(const int &i)
     stream << i;
     return stream.str();
 }
+
+int dur2num( const int& dur )
+{
+	const int tdur = 4;
+	
+	int dur_[] = {333, 334, 666, 1000};
+	int num_[] = {12, 12, 6, 4};
+	
+	for( int i=0; i<tdur; i++ )
+	{
+	    if( dur == dur_[i] )
+	    	return num_[i];
+	}
+	
+	return 0;
+}
+
+
+std::string note2name( const double& note )
+{
+	const int tfreq = 44;
+	
+	double freq_[] = {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0,
+    466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0,
+    830.6, 880.0, 932.3, 987.8, 1046.5, 1108.7, 1174.7, 1244.5, 1318.5,
+    1396.9, 1480.0, 1568.0, 1661.2, 1760.0, 1864.7, 1975.5, 2093.0, 2217.5,
+    2349.3, 2489.0, 2637.0, 2793.8, 2960.0, 3136.0};
+	
+	std::string name_[] = {"c3", "c#3", "d3", "d#3", "e3", "f3", "gb3", "g3", "ab3", "a4", "bb4", "b4", "c4", "c#4", "d4", "d#4", "e4", "f4", "gb4", "g4", "ab4", "a5", "bb5", "b5", "c5", "c#5", "d5", "d#5", "e5", "f5", "gb5", "g5", "ab5", "a6", "bb6", "b6", "c6", "c#6", "d6", "d#6", "e6", "f6", "gb6", "g6" };
+	
+	for( int i=0; i<tfreq; i++ )
+	{
+		if( note == freq_[i] )
+			return name_[i];
+	}
+	
+	return "r";
+}
+
+

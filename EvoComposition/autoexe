@@ -1,0 +1,7 @@
+#!/bin/bash
+
+pypy generatewave1.py
+pypy generatewave2.py
+pypy generatewave3.py
+pypy generatewave4.py
+python2 combine.py

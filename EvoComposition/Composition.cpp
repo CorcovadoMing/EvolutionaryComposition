@@ -28,14 +28,8 @@ const std::vector<double> Composition::G_LICK =
 const std::vector< std::vector<Sound> > Composition::pattern_of_beat =
     {
         {Sound(Sound::STD_FREQ_PITCH, 333),
-         Sound(0.0, 333), Sound(Sound::STD_FREQ_PITCH, 334)},
+         Sound(Sound::STD_FREQ_PITCH, 333), Sound(Sound::STD_FREQ_PITCH, 334)},
         {Sound(Sound::STD_FREQ_PITCH, 750), Sound(Sound::STD_FREQ_PITCH, 250)},
-        {Sound(Sound::STD_FREQ_PITCH, 500), Sound(Sound::STD_FREQ_PITCH, 166),
-         Sound(Sound::STD_FREQ_PITCH, 166), Sound(Sound::STD_FREQ_PITCH, 168)},
-        {Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250),
-         Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250)},
-        {Sound(Sound::STD_FREQ_PITCH, 750),
-         Sound(Sound::STD_FREQ_PITCH, 125), Sound(Sound::STD_FREQ_PITCH, 125)},
         {Sound(Sound::STD_FREQ_PITCH, 1000)}
     };
 #else
@@ -72,8 +66,8 @@ Composition::G_LICK(G_LICK_, G_LICK_+sizeof(G_LICK_)/sizeof(G_LICK_[0]));
 
 
 Sound a1[] = {Sound(Sound::STD_FREQ_PITCH, 333),
-              Sound(0.0, 333), Sound(Sound::STD_FREQ_PITCH, 334)};
-Sound a2[] = {Sound(Sound::STD_FREQ_PITCH, 750), Sound(Sound::STD_FREQ_PITCH, 250)};
+              Sound(Sound::STD_FREQ_PITCH, 333), Sound(Sound::STD_FREQ_PITCH, 334)};
+Sound a2[] = {Sound(Sound::STD_FREQ_PITCH, 666), Sound(Sound::STD_FREQ_PITCH, 334)};
 Sound a3[] = {Sound(Sound::STD_FREQ_PITCH, 500), Sound(Sound::STD_FREQ_PITCH, 166),
               Sound(Sound::STD_FREQ_PITCH, 166), Sound(Sound::STD_FREQ_PITCH, 168)};
 Sound a4[] = {Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250),
@@ -88,21 +82,11 @@ std::vector<Sound> s3(&a3[0], &a3[0]+4);
 std::vector<Sound> s4(&a4[0], &a4[0]+4);
 std::vector<Sound> s5(&a5[0], &a5[0]+3);
 std::vector<Sound> s6(&a6[0], &a6[0]+1);
-std::vector<Sound> s[] = {s1, s2, s3, s4, s5, s6};
+std::vector<Sound> s[] = {s1, s2, s6}; // tmp use these sets
 
 const std::vector< std::vector<Sound> >
 Composition::pattern_of_beat(s, s+sizeof(s)/sizeof(s[0]));
 #endif
-
-//functions for fitness calc
-bool
-isIn( const double& elem, const std::vector<double>& list )
-{
-  for( int i=0; i<list.size(); i++ )
-    if( elem == list[i] ) return true;
-  return false;
-}
-
 
 //functions for fitness calc
 

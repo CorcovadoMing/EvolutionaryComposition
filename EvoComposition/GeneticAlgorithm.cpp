@@ -73,15 +73,16 @@ GeneticAlgorithm::run()
         population_ = create_initial_population(population_size_);
     }
 
-    std::cout << problem_.pitchFitness(population_[0]) << std::endl;
-    std::cout << problem_.pitchFitness(population_[1]) << std::endl;
-    std::cout << problem_.beatFitness(population_[2]) << std::endl;
-    std::cout << problem_.beatFitness(population_[3]) << std::endl;
-
     // The current generation
     unsigned int generation = 0;
     // Do the max of generation times
     while (generation < max_generation_) {
+    	
+    	std::cout << problem_.pitchFitness(population_[0]) << std::endl;
+    	std::cout << problem_.pitchFitness(population_[1]) << std::endl;
+    	std::cout << problem_.beatFitness(population_[2]) << std::endl;
+    	std::cout << problem_.beatFitness(population_[3]) << std::endl;
+    	
         if (elitism_individual_ != -1) {
             crossover(elitism_individual_);
         }
