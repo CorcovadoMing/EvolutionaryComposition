@@ -12,32 +12,57 @@
 
 GeneticAlgorithm::GeneticAlgorithm()
     : problem_(),
-      max_generation_(1000),
       population_size_(0),
-      population_()
+      population_(),
+      max_generation_(0),
+      mutation_rate_(0.0),
+      elitism_individual_(-1)
 {
 }
 
 GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
-                                   int max_generation,
-                                   int population_size)
+                                   unsigned int population_size,
+                                   unsigned int max_generation,
+                                   double mutation_rate,
+                                   int elitism_individual)
     : problem_(problem),
-      max_generation_(max_generation),
       population_size_(population_size),
-      population_()
+      population_(),
+      max_generation_(max_generation),
+      mutation_rate_(mutation_rate),
+      elitism_individual_(elitism_individual)
 {
     std::srand((unsigned int)std::time(NULL));
 }
 
 GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
-                                   int max_generation,
                                    const std::vector<Music>& population)
     : problem_(problem),
-      max_generation_(max_generation),
       population_size_(population.size()),
-      population_(population)
+      population_(population),
+      max_generation_(0),
+      mutation_rate_(0.0),
+      elitism_individual_(-1)
 {
     std::srand((unsigned int)std::time(NULL));
+}
+
+void
+GeneticAlgorithm::set_max_generation(unsigned int max_generation)
+{
+    max_generation_ = max_generation;
+}
+
+void
+GeneticAlgorithm::set_mutation_rate(double mutation_rate)
+{
+    mutation_rate_ = mutation_rate;
+}
+
+void
+GeneticAlgorithm::set_elitism_individual(int elitism_individual)
+{
+    elitism_individual_ = elitism_individual;
 }
 
 void
@@ -47,33 +72,35 @@ GeneticAlgorithm::run()
     if (population_.size() == 0) {
         population_ = create_initial_population(population_size_);
     }
-	
+
+    std::cout << problem_.pitchFitness(population_[0]) << std::endl;
+    std::cout << problem_.pitchFitness(population_[1]) << std::endl;
+    std::cout << problem_.beatFitness(population_[2]) << std::endl;
+    std::cout << problem_.beatFitness(population_[3]) << std::endl;
+
     // The current generation
-    int generation = 0;
+    unsigned int generation = 0;
     // Do the max of generation times
-	//for (int i = 0; i < population_size_; ++i) { problem_.evaluate_fitness_value(&population_[i]); }
-	
-	std::cout << problem_.pitchFitness(population_[0]) << std::endl;
-	std::cout << problem_.beatFitness(population_[1]) << std::endl;
-    
     while (generation < max_generation_) {
-		crossover();
-        mutation();
+        if (elitism_individual_ != -1) {
+            crossover(elitism_individual_);
+        }
+
+        std::vector<Music> children = mutation(population_);
         //sort();
-		//selection();
-		++generation;
+        population_ = selection(population_, children);
+        ++generation;
     }
 }
 
 std::vector<Music>
-GeneticAlgorithm::create_initial_population(int population_size)
+GeneticAlgorithm::create_initial_population(unsigned int population_size)
 {
     std::vector<Music> population;
     population.reserve(population_size);
 
-    for (int i = 0; i < population_size; ++i) {
+    for (std::size_t i = 0; i < population_size; ++i) {
         Music new_solution = problem_.create_initial_solution();
-        //problem_.evaluate_fitness_value(&new_solution);
         population.push_back(new_solution);
     }
 
@@ -81,7 +108,7 @@ GeneticAlgorithm::create_initial_population(int population_size)
 }
 
 void
-GeneticAlgorithm::crossover()
+GeneticAlgorithm::crossover(int elitism_individual)
 {
     // two parent reproduce two children
 
@@ -129,32 +156,117 @@ GeneticAlgorithm::crossover()
     //}
 }
 
-void
-GeneticAlgorithm::mutation()
+std::vector<Music>
+GeneticAlgorithm::mutation(const std::vector<Music>& parents) const
 {
-    // mutate a random note in a random bar
-    for (std::size_t idx = 0; idx < population_.size(); ++idx) {
-        if((double)rand() / (RAND_MAX + 1) < 0.01){// mutation rate = 0.01
+    std::vector<Music> children;
+    children.reserve(parents.size());
 
-            int x = rand() % population_[idx].num_bar(),
-                y = rand() % population_[idx][x].num_beat(),
-                z = rand() % population_[idx][x][y].num_sound();
-
-			Sound sound = population_[idx][x][y][z];
-
-			sound = problem_.changeFreqOfPitch(sound);
-
-			population_[idx][x][y][z] = sound;
-		}
+    // The first half do pitch mutation
+    std::size_t half_parents_size = parents.size() / 2;
+    for (std::size_t idx = 0; idx < half_parents_size; ++idx) {
+        children.push_back(pitch_mutation(parents[idx]));
     }
+    // The last half do beat pattern mutation
+    for (std::size_t idx = half_parents_size; idx < parents.size(); ++idx) {
+        children.push_back(beat_pattern_mutation(parents[idx]));
+    }
+
+    return children;
 }
 
-void
-GeneticAlgorithm::selection()
+Music
+GeneticAlgorithm::pitch_mutation(const Music& parent) const
 {
-    while(population_.size() > (unsigned int)population_size()) {
-        population_.pop_back();
+    Music child = parent;
+
+    std::size_t num_bar = child.num_bar();
+    for (std::size_t idxBar = 0; idxBar < num_bar; ++idxBar) {
+
+        std::size_t num_beat = child[idxBar].num_beat();
+        for (std::size_t idxBeat = 0; idxBeat < num_beat; ++idxBeat) {
+
+            std::size_t num_sound = child[idxBar][idxBeat].num_sound();
+            for (std::size_t idxSound = 0; idxSound < num_sound; ++idxSound) {
+
+                // mutate all note under mutation rate condition
+                double rnd = rand() / (double)(((unsigned)RAND_MAX)+1u);
+                if(rnd < mutation_rate_) {
+
+                    Sound sound = child[idxBar][idxBeat][idxSound];
+
+                    sound = problem_.changeFreqOfPitch(sound);
+
+                    child[idxBar][idxBeat][idxSound] = sound;
+                }
+            }
+        }
     }
+    return child;
+}
+
+Music
+GeneticAlgorithm::beat_pattern_mutation(const Music& parent) const
+{
+    Music child = parent;
+
+    std::size_t num_bar = child.num_bar();
+    for (std::size_t idxBar = 0; idxBar < num_bar; ++idxBar) {
+
+        std::size_t num_beat = child[idxBar].num_beat();
+        for (std::size_t idxBeat = 0; idxBeat < num_beat; ++idxBeat) {
+
+            // mutate all beat under mutation rate condition
+            double rnd = rand() / (double)(((unsigned)RAND_MAX)+1u);
+            if(rnd < mutation_rate_) {
+
+                Beat beat = child[idxBar][idxBeat];
+
+                beat = problem_.changePatternOfBeat(beat);
+
+                child[idxBar][idxBeat] = beat;
+            }
+
+        }
+    }
+
+    return child;
+}
+
+std::vector<Music>
+GeneticAlgorithm::selection(const std::vector<Music>& parents,
+                            const std::vector<Music>& children) const
+{
+    //return children;
+    std::vector<Music> result;
+    result.reserve(parents.size());
+
+    std::size_t half_parents_size = parents.size() / 2;
+    for (std::size_t idx = 0; idx < parents.size() && idx < children.size(); ++idx) {
+
+        Music parent = parents[idx],
+              child = children[idx];
+
+        double fitness_parent = 0.0, fitness_child = 0.0;
+        if (idx < half_parents_size) {
+            fitness_parent = problem_.pitchFitness(parent);
+            fitness_child = problem_.pitchFitness(child);
+        }
+        else {
+            fitness_parent = problem_.beatFitness(parent);
+            fitness_child = problem_.beatFitness(child);
+        }
+
+        // if child is better than parent
+        if (fitness_child > fitness_parent) {
+            result.push_back(child);
+        }
+        else {
+            result.push_back(parent);
+        }
+    }
+
+    return result;
 }
 
 void

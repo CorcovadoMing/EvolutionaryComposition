@@ -20,7 +20,8 @@ SoundIO::input_from(Sound *sound, std::istream& is)
         std::istringstream iss_freq(str.substr(0, n)),
                            iss_dur(str.substr(n+1));
 
-        int freq = 0, dur = 0;
+        float freq = 0;
+        int dur = 0;
         iss_freq >> freq;
         iss_dur >> dur;
         sound->set_frequency(freq);

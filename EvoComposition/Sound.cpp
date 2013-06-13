@@ -1,5 +1,7 @@
 #include <vector>
 #include <cstddef>
+#include <cmath>
+#include <limits>
 #include "Sound.h"
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -21,6 +23,16 @@ Sound::Sound()
 Sound::Sound(float frequency, int duration)
     : frequency_(frequency), duration_(duration)
 {
+}
+
+bool Sound::isRestNote() const
+{
+    if (std::fabs(frequency_) < std::numeric_limits<float>::epsilon()) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 /**

@@ -1,14 +1,14 @@
 #include <cstdlib>
 #include <cstddef>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
 #include "SoundIO.h"
 #include "CompositionIO.h"
 
-void readFromFile(GeneticAlgorithm* algo, int max_generation,
-                  const std::string& file_name);
+void readFromFile(GeneticAlgorithm* algo, const std::string& file_name);
 void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo);
 
 std::string int2str(const int&);
@@ -19,20 +19,49 @@ void gPyBody(FILE *, const double&, const double&);
 void gPyFooter(FILE *);
 /*DO NOT CHANGE THIS THREE FUNC*/
 
-int main()
+int main(int argc, char *argv[])
 {
     const std::string music_file_name = "Music.txt";
 
 
     GeneticAlgorithm algo;
-    const int max_generation = 1000;
+    unsigned int max_generation = 1000;
+    double mutation_rate = 0.8;
+    int elitism_individual = -1;
 
+    if (argc > 4) {
+        std::cout << "insufficient input parameters." << std::endl;
+        std::cout << "Program [elitism_individual] [max_generation] [mutation_rate]" << std::endl;
+        exit(1);
+    }
+    else if (argc >= 2 && argc <= 4) {
+        for (int i = 2; i <= argc; ++i) {
+            std::istringstream iss(std::string(argv[i-1]));
+            switch (i) {
+            case 2:
+                iss >> elitism_individual;
+                break;
+            case 3:
+                iss >> max_generation;
+                break;
+            case 4:
+                iss >> mutation_rate;
+                break;
+            }
+        }
+    }
+    else {
+        // argc == 1, default parameters
+    }
 
     // if there have music file, read data from the file
     std::ifstream ifs(music_file_name.c_str());
     if (ifs.is_open()) {
         ifs.close();
-        readFromFile(&algo, max_generation, music_file_name);
+        readFromFile(&algo, music_file_name);
+        algo.set_max_generation(max_generation);
+        algo.set_mutation_rate(mutation_rate);
+        algo.set_elitism_individual(elitism_individual);
     }
     // if there have not music file, create one.
     else {
@@ -44,10 +73,12 @@ int main()
         Composition problem(beats_per_bar, note_value,
                       total_num_bar, tempo);
 
-        const int population_size = 5;
+        const int population_size = 4;
 
 
-        algo = GeneticAlgorithm(problem, max_generation, population_size);
+        algo = GeneticAlgorithm(problem, population_size,
+                                max_generation, mutation_rate,
+                                elitism_individual);
     }
 
     // if you want to listen the music,
@@ -63,8 +94,7 @@ int main()
     return EXIT_SUCCESS;
 }
 
-void readFromFile(GeneticAlgorithm* algo, int max_generation,
-                  const std::string& file_name)
+void readFromFile(GeneticAlgorithm* algo, const std::string& file_name)
 {
     std::ifstream ifs(file_name.c_str());
     if (ifs.is_open()) {
@@ -80,7 +110,7 @@ void readFromFile(GeneticAlgorithm* algo, int max_generation,
             }
         }
         // set algorithm
-        *algo = GeneticAlgorithm(problem, max_generation, population);
+        *algo = GeneticAlgorithm(problem, population);
     }
     else {
         std::cout << "The input file can not be read." << std::endl;
@@ -97,8 +127,8 @@ void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo)
         CompositionIO::output_to(ofs, problem);
 
         // output each Music
-        const int population_size = algo.population_size();
-        for (int idx = 0; idx < population_size; ++idx) {
+        unsigned int population_size = algo.population_size();
+        for (unsigned int idx = 0; idx < population_size; ++idx) {
             MusicIO::output_to(ofs, algo.individual(idx));
         }
     }
@@ -114,14 +144,14 @@ void writeToPy(const GeneticAlgorithm& algo)
 	int nfile;
 	FILE *fp;
 	const int population_size = algo.population_size();
-	
-	for (int idx = 0; idx < population_size; ++idx) 
+
+	for (int idx = 0; idx < population_size; ++idx)
 	{
 		nfile = idx + 1;
 		std::string filename = filehead + int2str(nfile) + filetype;
 		fp = fopen(filename.c_str(), "w+");
 		Music music = algo.individual(idx);
-		
+
     	//python script header generate
     	gPyHeader(fp, algo.problem().TEMPO);
     	std::size_t num_bar = music.num_bar();
