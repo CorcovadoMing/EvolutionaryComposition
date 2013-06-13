@@ -54,6 +54,7 @@ GeneticAlgorithm::run()
 	//for (int i = 0; i < population_size_; ++i) { problem_.evaluate_fitness_value(&population_[i]); }
 	
 	std::cout << problem_.pitchFitness(population_[0]) << std::endl;
+	std::cout << problem_.beatFitness(population_[1]) << std::endl;
     
     while (generation < max_generation_) {
 		crossover();

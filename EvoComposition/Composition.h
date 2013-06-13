@@ -20,7 +20,7 @@ public:
     //double evaluate_fitness_value(Music* music) const;
     
     double pitchFitness( const Music& music ) const;
-    double BeatFitness( const Music& music ) const;
+    double beatFitness( const Music& music ) const;
 
     /**
      *  All operations below are related to Composition.

@@ -4,7 +4,6 @@
 #include "Sound.h"
 #include "Composition.h"
 
-
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
 const std::vector<float> Composition::freq_of_pitch =
     {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0, 466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0, 830.6, 880.0, 932.3, 987.8, 1046.5, 1108.7, 1174.7, 1244.5, 1318.5, 1396.9, 1480.0, 1568.0, 1661.2, 1760.0, 1864.7, 1975.5, 2093.0, 2217.5, 2349.3, 2489.0, 2637.0, 2793.8, 2960.0, 3136.0};
@@ -23,8 +22,12 @@ const std::vector< std::vector<Sound> > Composition::pattern_of_beat =
          Sound(Sound::STD_FREQ_PITCH, 166), Sound(Sound::STD_FREQ_PITCH, 168)},
         {Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250),
          Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250)},
-        {Sound(Sound::STD_FREQ_PITCH, 500),
-         Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250)}
+        {Sound(Sound::STD_FREQ_PITCH, 750),
+         Sound(Sound::STD_FREQ_PITCH, 125), Sound(Sound::STD_FREQ_PITCH, 125)},
+        {Sound(Sound::STD_FREQ_PITCH, 1000)},
+        {Sound(Sound::STD_FREQ_PITCH, 2000)},
+        {Sound(Sound::STD_FREQ_PITCH, 3000)},
+        {Sound(Sound::STD_FREQ_PITCH, 4000)}
     };
 #else
 const float freq[] = {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0, 466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0, 830.6, 880.0, 932.3, 987.8, 1046.5, 1108.7, 1174.7, 1244.5, 1318.5, 1396.9, 1480.0, 1568.0, 1661.2, 1760.0, 1864.7, 1975.5, 2093.0, 2217.5, 2349.3, 2489.0, 2637.0, 2793.8, 2960.0, 3136.0};
@@ -52,14 +55,22 @@ Sound a3[] = {Sound(Sound::STD_FREQ_PITCH, 500), Sound(Sound::STD_FREQ_PITCH, 16
               Sound(Sound::STD_FREQ_PITCH, 166), Sound(Sound::STD_FREQ_PITCH, 168)};
 Sound a4[] = {Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250),
               Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250)};
-Sound a5[] = {Sound(Sound::STD_FREQ_PITCH, 500), Sound(Sound::STD_FREQ_PITCH, 250),
-              Sound(Sound::STD_FREQ_PITCH, 250)};
+Sound a5[] = {Sound(Sound::STD_FREQ_PITCH, 750), Sound(Sound::STD_FREQ_PITCH, 125),
+              Sound(Sound::STD_FREQ_PITCH, 125)};
+Sound a6[] = {Sound(Sound::STD_FREQ_PITCH, 1000)};
+Sound a7[] = {Sound(Sound::STD_FREQ_PITCH, 2000)};
+Sound a8[] = {Sound(Sound::STD_FREQ_PITCH, 3000)};
+Sound a9[] = {Sound(Sound::STD_FREQ_PITCH, 4000)};
 std::vector<Sound> s1(&a1[0], &a1[0]+3);
 std::vector<Sound> s2(&a2[0], &a2[0]+2);
 std::vector<Sound> s3(&a3[0], &a3[0]+4);
 std::vector<Sound> s4(&a4[0], &a4[0]+4);
 std::vector<Sound> s5(&a5[0], &a5[0]+3);
-std::vector<Sound> s[] = {s1, s2, s3, s4, s5};
+std::vector<Sound> s6(&a6[0], &a6[0]+1);
+std::vector<Sound> s7(&a7[0], &a7[0]+1);
+std::vector<Sound> s8(&a8[0], &a8[0]+1);
+std::vector<Sound> s9(&a9[0], &a9[0]+1);
+std::vector<Sound> s[] = {s1, s2, s3, s4, s5, s6, s7, s8, s9};
 
 const std::vector< std::vector<Sound> >
 Composition::pattern_of_beat(s, s+sizeof(s)/sizeof(s[0]));
@@ -175,6 +186,46 @@ Composition::pitchFitness( const Music& music ) const
         
     }
 	return fitness;
+}
+
+double
+Composition::beatFitness( const Music& music ) const
+{
+	double fitness = 0;
+	int note_avg = 0;
+	const int exp_avg = 12;
+	
+	
+	std::size_t num_bar = music.num_bar();
+    for (std::size_t idxMusic = 0; idxMusic < num_bar; ++idxMusic) {
+        
+        std::size_t num_beat = music[idxMusic].num_beat();
+        for (std::size_t idxBar = 0; idxBar < num_beat; ++idxBar) {
+            
+            note_avg += music[idxMusic][idxBar].num_sound(); //for part1 score use
+            
+            std::size_t num_sound = music[idxMusic][idxBar].num_sound();
+            for (std::size_t idxBeat = 0; idxBeat < num_sound; ++idxBeat) {
+            
+                
+            
+            }
+        }
+        
+        //part1 score for avg number of note each TWO BAR
+        if( idxMusic % 2 == 1 )
+        {
+           note_avg /= 2;
+           if( note_avg >= exp_avg+4 || note_avg <= exp_avg-4 )
+               fitness -= 70;
+           else
+               fitness += 100;
+           note_avg = 0;
+        }
+        //end part1 score  
+             
+    } 
+    return fitness;
 }
 /*
 double Composition::evaluate_fitness_value(Music* music) const

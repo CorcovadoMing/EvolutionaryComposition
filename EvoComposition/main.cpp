@@ -12,8 +12,8 @@ void readFromFile(GeneticAlgorithm* algo, int max_generation,
 void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo);
 
 std::string int2str(const int&);
-void writeToPy(const GeneticAlgorithm& algo);
 /*DO NOT CHANGE THIS THREE FUNC*/
+void writeToPy(const GeneticAlgorithm& algo);
 void gPyHeader(FILE *, const int&);
 void gPyBody(FILE *, const double&, const double&);
 void gPyFooter(FILE *);
