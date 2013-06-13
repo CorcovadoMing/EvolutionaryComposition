@@ -15,22 +15,26 @@ GeneticAlgorithm::GeneticAlgorithm()
       population_size_(0),
       population_(),
       max_generation_(0),
+      crossover_rate_(0.0),
       mutation_rate_(0.0),
-      elitism_individual_(-1)
+      index_elitism_individual_(-1)
 {
+    std::srand((unsigned int)std::time(NULL));
 }
 
 GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
                                    unsigned int population_size,
                                    unsigned int max_generation,
+                                   double crossover_rate,
                                    double mutation_rate,
-                                   int elitism_individual)
+                                   int index_elitism_individual)
     : problem_(problem),
       population_size_(population_size),
       population_(),
       max_generation_(max_generation),
+      crossover_rate_(crossover_rate),
       mutation_rate_(mutation_rate),
-      elitism_individual_(elitism_individual)
+      index_elitism_individual_(index_elitism_individual)
 {
     std::srand((unsigned int)std::time(NULL));
 }
@@ -41,8 +45,9 @@ GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
       population_size_(population.size()),
       population_(population),
       max_generation_(0),
+      crossover_rate_(0.0),
       mutation_rate_(0.0),
-      elitism_individual_(-1)
+      index_elitism_individual_(-1)
 {
     std::srand((unsigned int)std::time(NULL));
 }
@@ -54,15 +59,21 @@ GeneticAlgorithm::set_max_generation(unsigned int max_generation)
 }
 
 void
+GeneticAlgorithm::set_crossover_rate(double crossover_rate)
+{
+    crossover_rate_ = crossover_rate;
+}
+
+void
 GeneticAlgorithm::set_mutation_rate(double mutation_rate)
 {
     mutation_rate_ = mutation_rate;
 }
 
 void
-GeneticAlgorithm::set_elitism_individual(int elitism_individual)
+GeneticAlgorithm::set_index_elitism_individual(int index_elitism_individual)
 {
-    elitism_individual_ = elitism_individual;
+    index_elitism_individual_ = index_elitism_individual;
 }
 
 void
@@ -73,19 +84,20 @@ GeneticAlgorithm::run()
         population_ = create_initial_population(population_size_);
     }
 
+    // if it exist elitism individual, pass its information to the others
+    if (index_elitism_individual_ != -1) {
+        crossover(static_cast<unsigned int>(index_elitism_individual_));
+    }
+
     // The current generation
     unsigned int generation = 0;
     // Do the max of generation times
     while (generation < max_generation_) {
-    	
-    	std::cout << problem_.pitchFitness(population_[0]) << std::endl;
-    	std::cout << problem_.pitchFitness(population_[1]) << std::endl;
-    	std::cout << problem_.beatFitness(population_[2]) << std::endl;
-    	std::cout << problem_.beatFitness(population_[3]) << std::endl;
-    	
-        if (elitism_individual_ != -1) {
-            crossover(elitism_individual_);
-        }
+
+        std::cout << problem_.pitchFitness(population_[0]) << std::endl;
+        std::cout << problem_.pitchFitness(population_[1]) << std::endl;
+        std::cout << problem_.beatFitness(population_[2]) << std::endl;
+        std::cout << problem_.beatFitness(population_[3]) << std::endl;
 
         std::vector<Music> children = mutation(population_);
         //sort();
@@ -109,52 +121,36 @@ GeneticAlgorithm::create_initial_population(unsigned int population_size)
 }
 
 void
-GeneticAlgorithm::crossover(int elitism_individual)
+GeneticAlgorithm::crossover(unsigned int idx_elitism)
 {
-    // two parent reproduce two children
+    if (idx_elitism >= population_.size()) {
+        return ;
+    }
 
-    // select random two parents
-	int a = 0 ,b = 0;
-    const int num_parent = 2;
-    std::vector<Music> parent(2);
-    //for (int i = 0; i < num_parent; ++i) {
-		a = std::rand() % population_.size();
-		b = std::rand() % population_.size();
-        Music m1 = population_[a],
-              m2 = population_[b];
+    // pass informations to the other indivisual
+    for (std::size_t idxMusic = 0; idxMusic < population_.size(); ++idxMusic) {
+        if (idxMusic == idx_elitism) {
+            continue;
+        }
 
-        //if (m1.fitness_value() > m2.fitness_value())
-            parent[0] = m1;
-        //else
-            parent[1] = m2;
-    //}
+        Music elitism = population_[idx_elitism];
 
-	// exchange first x - 1 bar and first y beat in NO.x bar
-	unsigned int x = rand() % parent[0].num_bar() ,y = rand() % parent[0][x].num_beat();
-	for (unsigned int i = 0; i < parent[0].num_bar(); ++i) {
-		if(i < x){
-			std::swap(parent[0][i], parent[1][i]);
-			continue;
-		}
-		for (unsigned int j = 0; j < parent[0][x].num_beat(); ++j) {
-			if(i == x && j <= y){std::swap(parent[0][i][j], parent[1][i][j]);}
-		}
-	}
+        std::size_t num_bar = population_[idxMusic].num_bar();
+        for (std::size_t idxBar = 0; idxBar < num_bar; ++idxBar) {
 
-	//may replace
-	for (int i = 0; i < num_parent; ++i) {/*problem_.evaluate_fitness_value(&parent[i])*/;}
-	if(x < parent[0].num_bar() / 2){
-		if(parent[0].fitness_value() > population_[a].fitness_value()){population_[a] = parent[0];}
-		if(parent[1].fitness_value() > population_[b].fitness_value()){population_[b] = parent[1];}
-	}
-	else{
-		if(parent[1].fitness_value() > population_[a].fitness_value()){population_[a] = parent[1];}
-		if(parent[0].fitness_value() > population_[b].fitness_value()){population_[b] = parent[0];}
-	}
+            std::size_t num_beat = population_[idxMusic][idxBar].num_beat();
+            for (std::size_t idxBeat = 0; idxBeat < num_beat; ++idxBeat) {
 
-    //for (int i = 0; i < num_parent; ++i) {
-        //population_.push_back(parent[i]);
-    //}
+                // every beat have a probability to pass it to another
+                double rnd = rand() / (double)(((unsigned)RAND_MAX)+1u);
+                if(rnd < crossover_rate_) {
+
+                    std::swap(population_[idxMusic][idxBar][idxBeat],
+                              elitism[idxBar][idxBeat]);
+                }
+            }
+        }
+    }
 }
 
 std::vector<Music>

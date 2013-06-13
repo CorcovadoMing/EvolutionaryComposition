@@ -89,17 +89,13 @@ Composition::pattern_of_beat(s, s+sizeof(s)/sizeof(s[0]));
 #endif
 
 //functions for fitness calc
-
 bool
 isIn( const double& elem, const std::vector<double>& list )
 {
-	for( int i=0; i<list.size(); i++ )
-		if( elem == list[i] ) return true;
-	return false;
+    for( std::size_t i=0; i<list.size(); i++ )
+        if( elem == list[i] ) return true;
+    return false;
 }
-
-//
-
 
 Composition::Composition(int beats_per_bar, int note_value,
                          int total_num_bar, int tempo)
@@ -275,7 +271,7 @@ double Composition::evaluate_fitness_value(Music* music) const
 		}
 		if(x == y){
 			for(int j = 0;j < music[0][(i + 1) / 4][(i + 1) % 4].num_sound();++j){
-				if(y != music[0][(i + 1) / 4][(i + 1) % 4][j].frequency() 
+				if(y != music[0][(i + 1) / 4][(i + 1) % 4][j].frequency()
 					&& music[0][(i + 1) / 4][(i + 1) % 4][j].frequency() != 0){
 					y = music[0][(i + 1) / 4][(i + 1) % 4][j].frequency();
 					break;

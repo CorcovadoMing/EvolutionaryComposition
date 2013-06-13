@@ -32,25 +32,29 @@ int main(int argc, char *argv[])
 
     GeneticAlgorithm algo;
     unsigned int max_generation = 1000;
-    double mutation_rate = 0.8;
-    int elitism_individual = -1;
+    double crossover_rate = 0.5;
+    double mutation_rate = 0.1;
+    int index_elitism_individual = -1;
 
-    if (argc > 4) {
+    if (argc > 5) {
         std::cout << "insufficient input parameters." << std::endl;
-        std::cout << "Program [elitism_individual] [max_generation] [mutation_rate]" << std::endl;
+        std::cout << "Program [index_elitism_individual] [max_generation] [crossover_rate] [mutation_rate]" << std::endl;
         exit(1);
     }
-    else if (argc >= 2 && argc <= 4) {
+    else if (argc >= 2 && argc <= 5) {
         for (int i = 2; i <= argc; ++i) {
             std::istringstream iss(argv[i-1]);
             switch (i) {
             case 2:
-                iss >> elitism_individual;
+                iss >> index_elitism_individual;
                 break;
             case 3:
                 iss >> max_generation;
                 break;
             case 4:
+                iss >> crossover_rate;
+                break;
+            case 5:
                 iss >> mutation_rate;
                 break;
             }
@@ -59,6 +63,10 @@ int main(int argc, char *argv[])
     else {
         // argc == 1, default parameters
     }
+    std::cout << index_elitism_individual << std::endl;
+    std::cout << max_generation << std::endl;
+    std::cout << crossover_rate << std::endl;
+    std::cout << mutation_rate << std::endl;
 
     // if there have music file, read data from the file
     std::ifstream ifs(music_file_name.c_str());
@@ -66,8 +74,9 @@ int main(int argc, char *argv[])
         ifs.close();
         readFromFile(&algo, music_file_name);
         algo.set_max_generation(max_generation);
+        algo.set_crossover_rate(crossover_rate);
         algo.set_mutation_rate(mutation_rate);
-        algo.set_elitism_individual(elitism_individual);
+        algo.set_index_elitism_individual(index_elitism_individual);
     }
     // if there have not music file, create one.
     else {
@@ -82,9 +91,9 @@ int main(int argc, char *argv[])
         const int population_size = 4;
 
 
-        algo = GeneticAlgorithm(problem, population_size,
-                                max_generation, mutation_rate,
-                                elitism_individual);
+        algo = GeneticAlgorithm(problem, population_size, max_generation,
+                                crossover_rate, mutation_rate,
+                                index_elitism_individual);
     }
 
     // if you want to listen the music,
