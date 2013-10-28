@@ -1,0 +1,12 @@
+#!/bin/bash
+
+g++ -O2 ./src/Composition.cpp ./src/GeneticAlgorithm.cpp ./src/Sound.cpp ./src/SoundIO.cpp ./src/main.cpp -o ./handler/main
+
+./handler/main >> report
+
+./handler/pypy/bin/pypy -O ./handler/generatewave1.py
+./handler/pypy/bin/pypy -O ./handler/generatewave2.py
+./handler/pypy/bin/pypy -O ./handler/generatewave3.py
+./handler/pypy/bin/pypy -O ./handler/generatewave4.py
+
+python2 -O ./handler/combine.py

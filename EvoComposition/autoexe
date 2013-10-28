@@ -1,7 +1,0 @@
-#!/bin/bash
-
-./pypy/bin/pypy generatewave1.py
-./pypy/bin/pypy generatewave2.py
-./pypy/bin/pypy generatewave3.py
-./pypy/bin/pypy generatewave4.py
-python2 combine.py
