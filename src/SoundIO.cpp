@@ -3,6 +3,9 @@
 #include <string>
 #include <sstream>
 #include "Sound.h"
+#include "Music.h"
+#include "Beat.h"
+#include "Bar.h"
 #include "SoundIO.h"
 
 const char SoundIO::freq_dur_separator = ',',

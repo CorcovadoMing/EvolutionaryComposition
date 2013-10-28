@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void readMusicFileOrNewAlgorithm(const string&)
+void readMusicFileOrNewAlgorithm(const string& music_file_name)
 {
     std::ifstream ifs(music_file_name.c_str());
     if (ifs.is_open())

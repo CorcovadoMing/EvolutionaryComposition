@@ -8,6 +8,9 @@
 #include <algorithm>
 #include "Composition.h"
 #include "Sound.h"
+#include "Music.h"
+#include "Beat.h"
+#include "Bar.h"
 #include "GeneticAlgorithm.h"
 
 GeneticAlgorithm::GeneticAlgorithm()

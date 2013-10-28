@@ -2,6 +2,9 @@
 #define COMPOSITION_H
 
 #include "Sound.h"
+#include "Music.h"
+#include "Beat.h"
+#include "Bar.h"
 
 class Composition
 {

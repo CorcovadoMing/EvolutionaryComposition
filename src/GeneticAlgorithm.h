@@ -5,6 +5,9 @@
 #include <vector>
 #include <cstddef>
 #include "Sound.h"
+#include "Music.h"
+#include "Beat.h"
+#include "Bar.h"
 #include "Composition.h"
 
 class GeneticAlgorithm

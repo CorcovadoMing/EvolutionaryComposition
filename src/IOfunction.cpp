@@ -8,6 +8,10 @@
 #include <stdio.h>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
+#include "Sound.h"
+#include "Music.h"
+#include "Beat.h"
+#include "Bar.h"
 #include "SoundIO.h"
 #include "CompositionIO.h"
 #include "IOfunction.h"

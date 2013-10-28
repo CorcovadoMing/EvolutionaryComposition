@@ -2,6 +2,9 @@
 #include <cstdlib>
 #include <cstddef>
 #include "Sound.h"
+#include "Music.h"
+#include "Beat.h"
+#include "Bar.h"
 #include "Composition.h"
 
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L

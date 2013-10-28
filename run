@@ -1,8 +1,7 @@
 #!/bin/bash
 
-g++ -O2 ./src/Composition.cpp ./src/GeneticAlgorithm.cpp ./src/Sound.cpp ./src/SoundIO.cpp ./src/IOfunction.cpp ./src/main.cpp -o ./handler/main
-
-./handler/main >> report
+./compileTest
+./algoTest
 
 ./handler/pypy/bin/pypy -O ./handler/generatewave1.py
 ./handler/pypy/bin/pypy -O ./handler/generatewave2.py
