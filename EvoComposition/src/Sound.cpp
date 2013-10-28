@@ -8,31 +8,18 @@
 #include "windows.h"
 #endif
 
-/**
- *  Sound
- */
-
 const float Sound::STD_FREQ_PITCH = 440.0; // A: 440 Hz
 const int Sound::STD_DUR_BEAT = 1000; // 1000 millisecond
 
 Sound::Sound()
-    : frequency_(STD_FREQ_PITCH), duration_(STD_DUR_BEAT)
-{
-}
+: frequency_(STD_FREQ_PITCH), duration_(STD_DUR_BEAT){}
 
 Sound::Sound(float frequency, int duration)
-    : frequency_(frequency), duration_(duration)
-{
-}
+: frequency_(frequency), duration_(duration){}
 
 bool Sound::isRestNote() const
 {
-    if (std::fabs(frequency_) < std::numeric_limits<float>::epsilon()) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return std::fabs(frequency_) < std::numeric_limits<float>::epsilon();
 }
 
 /**

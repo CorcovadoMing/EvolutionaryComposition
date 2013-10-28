@@ -1,6 +1,6 @@
 #!/bin/bash
 
-g++ -O2 ./src/Composition.cpp ./src/GeneticAlgorithm.cpp ./src/Sound.cpp ./src/SoundIO.cpp ./src/main.cpp -o ./handler/main
+g++ -O2 ./src/Composition.cpp ./src/GeneticAlgorithm.cpp ./src/Sound.cpp ./src/SoundIO.cpp ./src/IOfunction.cpp ./src/main.cpp -o ./handler/main
 
 ./handler/main >> report
 
