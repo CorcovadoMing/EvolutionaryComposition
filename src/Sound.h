@@ -7,19 +7,25 @@
 class Sound
 {
 public:
-    static const float STD_FREQ_PITCH;    // A: 440 Hz
+    static const double STD_FREQ_PITCH;    // A: 440 Hz
     static const int STD_DUR_BEAT;    // 1000 millisecond
     Sound();
-    Sound(float frequency, int duration);
+    Sound(double frequency, int duration);
 
     bool isRestNote() const;
-    void set_frequency(float frequency) { frequency_ = frequency; }
+    void set_frequency(double frequency) { frequency_ = frequency; }
     void set_duration(int duration) { duration_ = duration; }
-    float frequency() const { return frequency_; }
+    double frequency() const { return frequency_; }
     int duration() const { return duration_; }
+    
+    static bool input_from(Sound *sound, std::istream& is);
+    static void output_to(std::ostream& os, const Sound& sound);
+
+    static const char freq_dur_separator,
+                      separator;
 
 private:
-    float frequency_;    // in hertz
+    double frequency_;    // in hertz
     int duration_;    // in millisecond
 };
 

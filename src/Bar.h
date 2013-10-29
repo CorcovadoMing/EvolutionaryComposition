@@ -2,7 +2,6 @@
 #define BAR_H
 
 #include <vector>
-#include <cstddef>
 #include "Beat.h"
 
 class Bar
@@ -16,6 +15,12 @@ public:
     Beat& operator[] (std::size_t idx);
     const Beat& operator[] (std::size_t idx) const;
     std::size_t num_beat() const { return beats_.size(); }
+    std::size_t num() const { return num_beat(); }
+    
+    static bool input_from(Bar *bar, std::istream& is);
+    static void output_to(std::ostream& os, const Bar& bar);
+
+    static const char separator;
 
 private:
     std::vector<Beat> beats_;

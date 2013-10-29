@@ -2,7 +2,6 @@
 #define MUSIC_H
 
 #include <vector>
-#include <cstddef>
 #include "Bar.h"
 
 class Music
@@ -17,7 +16,13 @@ public:
     const Bar& operator[] (std::size_t idx) const;
     void set_fitness_value(double fitness_value);
     std::size_t num_bar() const { return bars_.size(); }
+    std::size_t num() const { return num_bar(); }
     double fitness_value() const { return fitness_value_; }
+    
+    static bool input_from(Music *music, std::istream& is);
+    static void output_to(std::ostream& os, const Music& music);
+
+    static const char separator;
 
 private:
     std::vector<Bar> bars_;

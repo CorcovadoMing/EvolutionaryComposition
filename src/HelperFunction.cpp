@@ -8,8 +8,6 @@
 #include <cstdio>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
-#include "SoundIO.h"
-#include "CompositionIO.h"
 #include "Helperfunction.h"
 
 using namespace std;
@@ -19,13 +17,13 @@ void readFromFile(GeneticAlgorithm& algo, const std::string& file_name)
     std::ifstream ifs(file_name.c_str());
     if (ifs.is_open()) 
     {
-        Composition problem = CompositionIO::input_from(ifs);
+        Composition problem = Composition::input_from(ifs);
 
         std::vector<Music> population;
         while (ifs.good()) 
         {
             Music music;
-            if (MusicIO::input_from(&music, ifs)) 
+            if (Music::input_from(&music, ifs)) 
             {
                 population.push_back(music);
             }
@@ -45,12 +43,12 @@ void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo)
         Composition problem = algo.problem();
 
         // output the information of problem
-        CompositionIO::output_to(ofs, problem);
+        Composition::output_to(ofs, problem);
 
         // output each Music
         unsigned int population_size = algo.population_size();
         for (unsigned int idx = 0; idx < population_size; ++idx) {
-            MusicIO::output_to(ofs, algo.individual(idx));
+            Music::output_to(ofs, algo.individual(idx));
         }
     }
     else {

@@ -5,11 +5,10 @@
 using namespace std;
 
 //paras
-const int beats_per_bar = 4,
-          note_value = 4,
-          total_num_bar = 12,
-          tempo = 120;
-
+int beats_per_bar = 4,
+    note_value = 4,
+    total_num_bar = 12,
+    tempo = 120;
 const int population_size = 4;
 const unsigned int max_generation = 1000;
 const double crossover_rate = 0.5;
@@ -24,7 +23,7 @@ GeneticAlgorithm algo;
 
 int main(int argc, char *argv[])
 {
-    const string music_file_name = "./handler/Music.txt";
+    const string music_file_name = "Music";
     
     readMusicFileOrNewAlgorithm(music_file_name);
     algo.run();

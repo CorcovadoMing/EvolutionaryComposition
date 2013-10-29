@@ -1,13 +1,11 @@
 #include <vector>
 #include <cstdlib>
-#include <cstddef>
-#include "Music.h"
-#include "Bar.h"
-#include "Beat.h"
-#include "Sound.h"
+#include <istream>
+#include <ostream>
+#include <sstream>
 #include "Composition.h"
 
-const std::vector<float> Composition::freq_of_pitch =
+const std::vector<double> Composition::freq_of_pitch =
     {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0,
     466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0,
     830.6, 880.0, 932.3, 987.8, 1046.5, 1108.7, 1174.7, 1244.5, 1318.5,
@@ -34,11 +32,11 @@ const std::vector< std::vector<Sound> > Composition::pattern_of_beat =
     {Sound(Sound::STD_FREQ_PITCH, 1000)}
 };
 
-
-bool isIn( const double& elem, const std::vector<double>& list )
+template<class generateType>
+bool isIn( const generateType& elem, const std::vector<generateType>& list )
 {
-    for( std::size_t i=0; i<list.size(); i++ )
-        if( elem == list[i] ) return true;
+    for( auto i : list )
+        if( i == elem ) return true;
     return false;
 }
 
@@ -62,8 +60,7 @@ Music Composition::create_initial_solution() const
     return music;
 }
 
-double
-Composition::pitchFitness( const Music& music ) const
+double Composition::pitchFitness( const Music& music ) const
 {
     double fitness = 0;
     double exp_avg = 523.3;
@@ -125,8 +122,7 @@ Composition::pitchFitness( const Music& music ) const
     return fitness;
 }
 
-double
-Composition::beatFitness( const Music& music ) const
+double Composition::beatFitness( const Music& music ) const
 {
     double fitness = 0;
     int note_avg = 0;
@@ -163,24 +159,15 @@ Composition::beatFitness( const Music& music ) const
     return fitness;
 }
 
-Beat
-Composition::changePatternOfBeat(const Sound& sound) const
+Beat Composition::changePatternOfBeat(const Sound& sound) const
 {
     int rand = std::rand() % pattern_of_beat.size();
     std::vector<Sound> pattern = pattern_of_beat[rand];
     Beat beat(pattern);
-
-    if (sound.isRestNote()) {
-        // do nothing
-    }
-    else {
-        // change each frequency of beat to input sound
-        for (std::size_t i = 0; i < beat.num_sound(); ++i) {
-
-            if (beat[i].isRestNote()) {
-                // do nothing
-            }
-            else {
+    if (!sound.isRestNote()) 
+    {
+        for (std::size_t i = 0; i < beat.num_sound(); i++) {
+            if (!beat[i].isRestNote()) {
                 beat[i].set_frequency(sound.frequency());
             }
         }
@@ -188,40 +175,31 @@ Composition::changePatternOfBeat(const Sound& sound) const
     return beat;
 }
 
-Beat
-Composition::changePatternOfBeat(const Beat& beat) const
+Beat Composition::changePatternOfBeat(const Beat& beat) const
 {
     int rand = std::rand() % pattern_of_beat.size();
     std::vector<Sound> pattern = pattern_of_beat[rand];
     Beat new_beat(pattern);
 
-    // change each frequency of new beat to input beat
     std::size_t idx_new_sound = 0, idx_sound = 0;
     std::size_t num_new_sound = new_beat.num_sound(), num_sound = beat.num_sound();
     while ((idx_new_sound < num_new_sound) && (idx_sound < num_sound)) {
-
         if (new_beat[idx_new_sound].isRestNote()) {
-            // do not change
             ++idx_new_sound;
-        }
-        else if (beat[idx_sound].isRestNote()) {
-            // do not change
+        } else if (beat[idx_sound].isRestNote()) {
             ++idx_sound;
         }
-        else {
+        else 
+        {
             new_beat[idx_new_sound].set_frequency(beat[idx_sound].frequency());
             ++idx_new_sound;
             ++idx_sound;
         }
     }
-    // if there are some note of new neat does not be changed
+    
     while (idx_new_sound < num_new_sound) {
-
-        if (new_beat[idx_new_sound].isRestNote()) {
-            // do not change
-        }
-        else {
-            // randomly select frequency
+        if (!new_beat[idx_new_sound].isRestNote()) 
+        {
             int rand = std::rand() % freq_of_pitch.size();
             new_beat[idx_new_sound].set_frequency(freq_of_pitch[rand]);
         }
@@ -230,45 +208,69 @@ Composition::changePatternOfBeat(const Beat& beat) const
     return new_beat;
 }
 
-Sound
-Composition::changeFreqOfPitch(const Sound& sound) const
+Sound Composition::changeFreqOfPitch(const Sound& sound) const
 {
-    // if it is a rest note
     if (sound.isRestNote()) {
         return sound;
-    }
+    } 
     else {
         int rand = std::rand() % freq_of_pitch.size();
         return Sound(freq_of_pitch[rand], sound.duration());
     }
 }
 
-Beat
-Composition::changeFreqOfPitch(const Beat& beat) const
+
+template<class compositionType>
+compositionType Composition::changeFreqOfPitch(const compositionType& type) const
 {
-    Beat b(beat);
-    for (std::size_t idx = 0; idx < b.num_sound(); ++idx) {
-        b[idx] = changeFreqOfPitch(b[idx]);
+    compositionType clonetype(type);
+    for (auto idx = 0; idx < type.num(); idx++) {
+        clonetype[idx] = changeFreqOfPitch(clonetype[idx]);
     }
-    return b;
+    return clonetype;
 }
 
-Bar
-Composition::changeFreqOfPitch(const Bar& bar) const
+const char Composition::separator = ' ', Composition::terminal_separator = '\n';
+
+Composition Composition::input_from(std::istream& is)
 {
-    Bar b(bar);
-    for (std::size_t idx = 0; idx < b.num_beat(); ++idx) {
-        b[idx] = changeFreqOfPitch(b[idx]);
+    int beats_per_bar = 0, note_value = 0,
+        total_num_bar = 0, tempo = 0;
+
+    if (is.good()) {
+        // parse line
+        std::string line;
+        std::getline(is, line, terminal_separator);
+        std::istringstream iss_line(line);
+        if (iss_line.good()) {
+
+            // parse each information
+            std::string str_beats_per_bar, str_note_value,
+                        str_total_num_bar, str_tempo;
+            std::getline(iss_line, str_beats_per_bar, separator);
+            std::getline(iss_line, str_note_value, separator);
+            std::getline(iss_line, str_total_num_bar, separator);
+            std::getline(iss_line, str_tempo, separator);
+            std::istringstream iss_beats_per_bar(str_beats_per_bar),
+                               iss_note_value(str_note_value),
+                               iss_total_num_bar(str_total_num_bar),
+                               iss_tempo(str_tempo);
+
+            iss_beats_per_bar >> beats_per_bar;
+            iss_note_value >> note_value;
+            iss_total_num_bar >> total_num_bar;
+            iss_tempo >> tempo;
+        }
     }
-    return b;
+
+    return Composition(beats_per_bar, note_value,
+                       total_num_bar, tempo);
 }
 
-Music
-Composition::changeFreqOfPitch(const Music& music) const
+void Composition::output_to(std::ostream& os, const Composition& composition)
 {
-    Music m(music);
-    for (std::size_t idx = 0; idx < m.num_bar(); ++idx) {
-        m[idx] = changeFreqOfPitch(m[idx]);
-    }
-    return m;
+    os << composition.BEATS_PER_BAR << separator <<
+          composition.NOTE_VALUE << separator <<
+          composition.TOTAL_NUMBER_BAR << separator <<
+          composition.TEMPO << terminal_separator;
 }

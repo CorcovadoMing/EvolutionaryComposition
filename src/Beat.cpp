@@ -1,9 +1,11 @@
 #include <vector>
-#include <cstddef>
-#include <cmath>
-#include <limits>
+#include <istream>
+#include <ostream>
+#include <sstream>
 #include "Beat.h"
 #include "Sound.h"
+
+const char Beat::separator = '\t';
 
 Beat::Beat()
 : sounds_(){}
@@ -29,4 +31,33 @@ Sound& Beat::operator[] (std::size_t idx)
 const Sound& Beat::operator[] (std::size_t idx) const
 {
     return sounds_[idx];
+}
+
+bool Beat::input_from(Beat *beat, std::istream& is)
+{
+    std::string str;
+    if (std::getline(is, str, separator)) {
+        std::istringstream iss(str);
+        while (iss.good()) {
+            Sound sound;
+            if (Sound::input_from(&sound, iss)) {
+                beat->add_sound(sound);
+            }
+        }
+
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void Beat::output_to(std::ostream& os, const Beat& beat)
+{
+    std::size_t num_sound = beat.num_sound();
+    for (std::size_t idxSound = 0; idxSound < num_sound; ++idxSound) {
+
+        Sound::output_to(os, beat[idxSound]);
+    }
+    os << separator;
 }
