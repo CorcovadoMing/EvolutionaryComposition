@@ -1,7 +1,16 @@
-EvolutionaryComposition
+#EvolutionaryComposition
 =======================
 
-Base on heuristic algorithem to generate 12-bars Blues
+###Base on heuristic algorithem to generate 12-bars Blues
+######it's is *experimen* to run.
+
+Todo:
+
+1. Re-design structure
+2. use more pattern to evolve 
+3. Data analysis, ploting GUI interface
+
+======
 
 Visit [ProjectSite][] for more information.
 [ProjectSite]: http://www.csie.ntnu.edu.tw/~u011906S
