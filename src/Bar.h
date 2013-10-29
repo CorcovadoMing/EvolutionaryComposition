@@ -20,10 +20,9 @@ public:
     static bool input_from(Bar *bar, std::istream& is);
     static void output_to(std::ostream& os, const Bar& bar);
 
-    static const char separator;
-
 private:
     std::vector<Beat> beats_;
+    static const char separator_ = '|';
 };
 
 #endif

@@ -5,8 +5,6 @@
 #include "Bar.h"
 #include "Beat.h"
 
-const char Bar::separator = '|';
-
 Bar::Bar()
 : beats_(){}
 
@@ -36,7 +34,7 @@ const Beat& Bar::operator[] (std::size_t idx) const
 bool Bar::input_from(Bar *bar, std::istream& is)
 {
     std::string str;
-    if (std::getline(is, str, separator)) {
+    if (std::getline(is, str, separator_)) {
         std::istringstream iss(str);
         while (iss.good()) {
             Beat beat;
@@ -58,5 +56,5 @@ void Bar::output_to(std::ostream& os, const Bar& bar)
     for (std::size_t idxBeat = 0; idxBeat < num_beat; ++idxBeat) {
         Beat::output_to(os, bar[idxBeat]);
     }
-    os << separator;
+    os << separator_;
 }

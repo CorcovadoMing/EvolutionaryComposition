@@ -5,8 +5,6 @@
 #include "Music.h"
 #include "Bar.h"
 
-const char Music::separator = '\n';
-
 Music::Music()
 : bars_(), fitness_value_(0){}
 
@@ -42,7 +40,7 @@ void Music::set_fitness_value(double fitness_value)
 bool Music::input_from(Music *music, std::istream& is)
 {
     std::string str;
-    if (std::getline(is, str, separator)) {
+    if (std::getline(is, str, separator_)) {
         std::istringstream iss(str);
         while (iss.good()) {
             Bar bar;
@@ -50,7 +48,6 @@ bool Music::input_from(Music *music, std::istream& is)
                 music->add_bar(bar);
             }
         }
-
         return true;
     }
     else {
@@ -65,5 +62,5 @@ void Music::output_to(std::ostream& os, const Music& music)
 
         Bar::output_to(os, music[idxBar]);
     }
-    os << separator;
+    os << separator_;
 }

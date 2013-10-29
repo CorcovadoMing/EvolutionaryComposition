@@ -22,11 +22,10 @@ public:
     static bool input_from(Music *music, std::istream& is);
     static void output_to(std::ostream& os, const Music& music);
 
-    static const char separator;
-
 private:
     std::vector<Bar> bars_;
     double fitness_value_; 
+    static const char separator_ = '\n';
 };
 
 #endif

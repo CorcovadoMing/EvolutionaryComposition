@@ -5,9 +5,6 @@
 #include <ostream>
 #include <sstream>
 #include "Sound.h"
-
-const char Sound::freq_dur_separator = ',',
-           Sound::separator = ' ';
            
 const double Sound::STD_FREQ_PITCH = 440.0; // A: 440 Hz
 const int Sound::STD_DUR_BEAT = 1000; // 1000 millisecond
@@ -26,8 +23,8 @@ bool Sound::isRestNote() const
 bool Sound::input_from(Sound *sound, std::istream& is)
 {
     std::string str;
-    if (std::getline(is, str, separator)) {
-        std::string::size_type n = str.find(freq_dur_separator);
+    if (std::getline(is, str, separator_)) {
+        std::string::size_type n = str.find(freq_dur_separator_);
         std::istringstream iss_freq(str.substr(0, n)),
                            iss_dur(str.substr(n+1));
 
@@ -47,7 +44,7 @@ bool Sound::input_from(Sound *sound, std::istream& is)
 
 void Sound::output_to(std::ostream& os, const Sound& sound)
 {
-   os << sound.frequency() << freq_dur_separator <<
-         sound.duration() << separator;
+   os << sound.frequency() << freq_dur_separator_ 
+      << sound.duration() << separator_;
 }
 

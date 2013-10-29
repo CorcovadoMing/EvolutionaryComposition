@@ -21,12 +21,13 @@ public:
     static bool input_from(Sound *sound, std::istream& is);
     static void output_to(std::ostream& os, const Sound& sound);
 
-    static const char freq_dur_separator,
-                      separator;
 
 private:
     double frequency_;    // in hertz
     int duration_;    // in millisecond
+    
+    static const char freq_dur_separator_ = ',',
+                      separator_ = ' ';
 };
 
 #endif // SOUND_H

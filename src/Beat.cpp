@@ -5,8 +5,6 @@
 #include "Beat.h"
 #include "Sound.h"
 
-const char Beat::separator = '\t';
-
 Beat::Beat()
 : sounds_(){}
 
@@ -36,7 +34,7 @@ const Sound& Beat::operator[] (std::size_t idx) const
 bool Beat::input_from(Beat *beat, std::istream& is)
 {
     std::string str;
-    if (std::getline(is, str, separator)) {
+    if (std::getline(is, str, separator_)) {
         std::istringstream iss(str);
         while (iss.good()) {
             Sound sound;
@@ -44,7 +42,6 @@ bool Beat::input_from(Beat *beat, std::istream& is)
                 beat->add_sound(sound);
             }
         }
-
         return true;
     }
     else {
@@ -56,8 +53,7 @@ void Beat::output_to(std::ostream& os, const Beat& beat)
 {
     std::size_t num_sound = beat.num_sound();
     for (std::size_t idxSound = 0; idxSound < num_sound; ++idxSound) {
-
         Sound::output_to(os, beat[idxSound]);
     }
-    os << separator;
+    os << separator_;
 }

@@ -21,10 +21,9 @@ public:
     static bool input_from(Beat *beat, std::istream& is);
     static void output_to(std::ostream& os, const Beat& beat);
 
-    static const char separator;
-
 private:
     std::vector<Sound> sounds_;
+    static const char separator_ = '\t';
 };
 
 #endif
