@@ -6,9 +6,7 @@
 #include "Sound.h"
 
 Beat::Beat()
-    : sounds_()
-{
-}
+: sounds_(){}
 
 Beat::Beat(std::size_t num_sounds)
 {
@@ -16,9 +14,7 @@ Beat::Beat(std::size_t num_sounds)
 }
 
 Beat::Beat(const std::vector<Sound>& soundlist)
-    : sounds_(soundlist)
-{
-}
+: sounds_(soundlist){}
 
 void Beat::add_sound(const Sound& sound)
 {

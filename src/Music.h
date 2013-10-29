@@ -18,7 +18,6 @@ public:
     void set_fitness_value(double fitness_value);
     std::size_t num_bar() const { return bars_.size(); }
     double fitness_value() const { return fitness_value_; }
-    void listen() const;
 
 private:
     std::vector<Bar> bars_;

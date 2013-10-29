@@ -6,9 +6,7 @@
 #include "Beat.h"
 
 Bar::Bar()
-    : beats_()
-{
-}
+: beats_(){}
 
 Bar::Bar(std::size_t num_beats)
 {
@@ -16,9 +14,7 @@ Bar::Bar(std::size_t num_beats)
 }
 
 Bar::Bar(const std::vector<Beat>& beatlist)
-    : beats_(beatlist)
-{
-}
+: beats_(beatlist){}
 
 void Bar::add_beat(const Beat& beat)
 {
@@ -27,7 +23,7 @@ void Bar::add_beat(const Beat& beat)
 
 Beat& Bar::operator[] (std::size_t idx)
 {
-    return const_cast<Beat &>(static_cast<const Bar &>(*this)[idx]);
+    return const_cast<Beat &>(static_cast<const Bar&>(*this)[idx]);
 }
 
 const Beat& Bar::operator[] (std::size_t idx) const

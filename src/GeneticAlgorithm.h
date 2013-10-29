@@ -1,20 +1,15 @@
 #ifndef GENETICALGORITHM_H
 #define GENETICALGORITHM_H
 
-#include <string>
 #include <vector>
 #include <cstddef>
-#include "Sound.h"
 #include "Music.h"
-#include "Beat.h"
-#include "Bar.h"
 #include "Composition.h"
 
 class GeneticAlgorithm
 {
 public:
     GeneticAlgorithm();
-
     GeneticAlgorithm(const Composition& problem,
                      unsigned int population_size,
                      unsigned int max_generation,
@@ -26,8 +21,7 @@ public:
                      const std::vector<Music>& population);
 
     void run();
-
-
+    
     void set_max_generation(unsigned int max_generation);
     void set_crossover_rate(double crossover_rate);
     void set_mutation_rate(double mutation_rate);
@@ -42,7 +36,6 @@ public:
     int index_elitism_individual() const { return index_elitism_individual_; }
 
 private:
-    // Data members refer to population-based algorithm
     Composition problem_;
 
     unsigned int population_size_;
@@ -52,7 +45,6 @@ private:
     double crossover_rate_;
     double mutation_rate_;
     int index_elitism_individual_;
-
 
     std::vector<Music> create_initial_population(unsigned int population_size);
 

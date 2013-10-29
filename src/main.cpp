@@ -1,7 +1,7 @@
 #include <fstream>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
-#include "IOfunction.h"
+#include "HelperFunction.h"
 using namespace std;
 
 //paras

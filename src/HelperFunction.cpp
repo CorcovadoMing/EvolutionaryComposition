@@ -4,17 +4,14 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-#include <stdarg.h>
-#include <stdio.h>
+#include <cstdarg>
+#include <cstdio>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
-#include "Sound.h"
-#include "Music.h"
-#include "Beat.h"
-#include "Bar.h"
 #include "SoundIO.h"
 #include "CompositionIO.h"
-#include "IOfunction.h"
+#include "Helperfunction.h"
+
 using namespace std;
 
 void readFromFile(GeneticAlgorithm& algo, const std::string& file_name)
@@ -123,39 +120,37 @@ std::string int2str(const int &i)
     return stream.str();
 }
 
-int dur2num( const int& dur )
+const int dur2num( const int& duration )
 {
-    const int tdur = 4;
+    vector<int> durationCollection = {333, 334, 666, 1000};
+    vector<int> notetime = {12, 12, 6, 4};
 
-    int dur_[] = {333, 334, 666, 1000};
-    int num_[] = {12, 12, 6, 4};
-
-    for( int i=0; i<tdur; i++ )
+    for( auto i : durationCollection )
     {
-        if( dur == dur_[i] )
-            return num_[i];
+        if( i == duration )
+            return notetime[i];
     }
-
     return 0;
 }
 
 
-std::string note2name( const double& note )
+const std::string note2name( const double& frequency )
 {
-    const int tfreq = 44;
-
-    double freq_[] = {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0,
+    const string restnote = "r";
+    vector<double> frequencyCollection = {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0,
     466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0,
     830.6, 880.0, 932.3, 987.8, 1046.5, 1108.7, 1174.7, 1244.5, 1318.5,
     1396.9, 1480.0, 1568.0, 1661.2, 1760.0, 1864.7, 1975.5, 2093.0, 2217.5,
     2349.3, 2489.0, 2637.0, 2793.8, 2960.0, 3136.0};
+    vector<string> notename = {"c3", "c#3", "d3", "d#3", "e3", "f3", "gb3", "g3", 
+    "ab3", "a4", "bb4", "b4", "c4", "c#4", "d4", "d#4", "e4", "f4", "gb4", "g4", "ab4", 
+    "a5", "bb5", "b5", "c5", "c#5", "d5", "d#5", "e5", "f5", "gb5", "g5", "ab5", "a6", 
+    "bb6", "b6", "c6", "c#6", "d6", "d#6", "e6", "f6", "gb6", "g6" };
 
-    std::string name_[] = {"c3", "c#3", "d3", "d#3", "e3", "f3", "gb3", "g3", "ab3", "a4", "bb4", "b4", "c4", "c#4", "d4", "d#4", "e4", "f4", "gb4", "g4", "ab4", "a5", "bb5", "b5", "c5", "c#5", "d5", "d#5", "e5", "f5", "gb5", "g5", "ab5", "a6", "bb6", "b6", "c6", "c#6", "d6", "d#6", "e6", "f6", "gb6", "g6" };
-
-    for( int i=0; i<tfreq; i++ )
+    for( auto i : frequencyCollection )
     {
-        if( note == freq_[i] )
-            return name_[i];
+        if( frequency == i )
+            return notename[i];
     }
-    return "r";
+    return restnote;
 }

@@ -1,13 +1,12 @@
 #include <vector>
 #include <cstdlib>
 #include <cstddef>
-#include "Sound.h"
 #include "Music.h"
-#include "Beat.h"
 #include "Bar.h"
+#include "Beat.h"
+#include "Sound.h"
 #include "Composition.h"
 
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
 const std::vector<float> Composition::freq_of_pitch =
     {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0,
     466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0,
@@ -35,65 +34,9 @@ const std::vector< std::vector<Sound> > Composition::pattern_of_beat =
         {Sound(Sound::STD_FREQ_PITCH, 750), Sound(Sound::STD_FREQ_PITCH, 250)},
         {Sound(Sound::STD_FREQ_PITCH, 1000)}
     };
-#else
-const float freq[] =
-    {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0,
-    466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0,
-    830.6, 880.0, 932.3, 987.8, 1046.5, 1108.7, 1174.7, 1244.5, 1318.5,
-    1396.9, 1480.0, 1568.0, 1661.2, 1760.0, 1864.7, 1975.5, 2093.0, 2217.5,
-    2349.3, 2489.0, 2637.0, 2793.8, 2960.0, 3136.0};
-
-const std::vector<float>
-Composition::freq_of_pitch(freq, freq+sizeof(freq)/sizeof(freq[0]));
 
 
-const double C_LICK_[] =
-    {261.6, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 466.2, 523.3, 587.3,
-    622.3, 659.3, 698.5, 740.0, 784.0, 932.3, 1046.5, 1174.7, 1244.5,
-    1318.5, 1396.9, 1480.0, 1568.0, 1864.7, 2093.0};
-const double F_LICK_[] =
-    {349.2, 392.0, 440.0, 466.2, 523.3, 587.3, 659.3, 698.5, 784.0, 880.0,
-    932.3, 1046.5, 1174.7, 1318.5, 1396.9, 1568.0, 1760.0, 1864.7, 2093.0,
-    2349.3, 2637.0};
-const double G_LICK_[] =
-    {392.0, 440.0, 492.9, 523.3, 587.3, 659.3, 698.5, 784.0, 880.0, 987.8,
-    1046.5, 1174.7, 1318.5, 1396.9, 1568.0, 1760.0, 1975.7, 2093.0, 2349.3,
-    2637.0, 2793.8, 3136.0};
-
-const std::vector<double>
-Composition::C_LICK(C_LICK_, C_LICK_+sizeof(C_LICK_)/sizeof(C_LICK_[0]));
-const std::vector<double>
-Composition::F_LICK(F_LICK_, F_LICK_+sizeof(F_LICK_)/sizeof(F_LICK_[0]));
-const std::vector<double>
-Composition::G_LICK(G_LICK_, G_LICK_+sizeof(G_LICK_)/sizeof(G_LICK_[0]));
-
-
-Sound a1[] = {Sound(Sound::STD_FREQ_PITCH, 333),
-              Sound(Sound::STD_FREQ_PITCH, 333), Sound(Sound::STD_FREQ_PITCH, 334)};
-Sound a2[] = {Sound(Sound::STD_FREQ_PITCH, 666), Sound(Sound::STD_FREQ_PITCH, 334)};
-Sound a3[] = {Sound(Sound::STD_FREQ_PITCH, 500), Sound(Sound::STD_FREQ_PITCH, 166),
-              Sound(Sound::STD_FREQ_PITCH, 166), Sound(Sound::STD_FREQ_PITCH, 168)};
-Sound a4[] = {Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250),
-              Sound(Sound::STD_FREQ_PITCH, 250), Sound(Sound::STD_FREQ_PITCH, 250)};
-Sound a5[] = {Sound(Sound::STD_FREQ_PITCH, 750), Sound(Sound::STD_FREQ_PITCH, 125),
-              Sound(Sound::STD_FREQ_PITCH, 125)};
-Sound a6[] = {Sound(Sound::STD_FREQ_PITCH, 1000)};
-
-std::vector<Sound> s1(&a1[0], &a1[0]+3);
-std::vector<Sound> s2(&a2[0], &a2[0]+2);
-std::vector<Sound> s3(&a3[0], &a3[0]+4);
-std::vector<Sound> s4(&a4[0], &a4[0]+4);
-std::vector<Sound> s5(&a5[0], &a5[0]+3);
-std::vector<Sound> s6(&a6[0], &a6[0]+1);
-std::vector<Sound> s[] = {s1, s2, s6}; // tmp use these sets
-
-const std::vector< std::vector<Sound> >
-Composition::pattern_of_beat(s, s+sizeof(s)/sizeof(s[0]));
-#endif
-
-//functions for fitness calc
-bool
-isIn( const double& elem, const std::vector<double>& list )
+bool isIn( const double& elem, const std::vector<double>& list )
 {
     for( std::size_t i=0; i<list.size(); i++ )
         if( elem == list[i] ) return true;
@@ -102,24 +45,14 @@ isIn( const double& elem, const std::vector<double>& list )
 
 Composition::Composition(int beats_per_bar, int note_value,
                          int total_num_bar, int tempo)
-    : BEATS_PER_BAR(beats_per_bar), NOTE_VALUE(note_value),
-      TOTAL_NUMBER_BAR(total_num_bar), TEMPO(tempo)
-{
-}
+: BEATS_PER_BAR(beats_per_bar), NOTE_VALUE(note_value),
+                TOTAL_NUMBER_BAR(total_num_bar), TEMPO(tempo){}
 
-/**
- *  All operations below are related to Evolutionary Algorithm
- */
-
-Music
-Composition::create_initial_solution() const
+Music Composition::create_initial_solution() const
 {
     Music music(TOTAL_NUMBER_BAR);
-
-    // for every Bar in Music
     for (int barIdx = 0; barIdx < TOTAL_NUMBER_BAR; ++barIdx) {
         Bar bar(BEATS_PER_BAR);
-        // for every Beat in a Bar
         for (int beatIdx = 0; beatIdx < BEATS_PER_BAR; ++beatIdx) {
             Beat beat = changePatternOfBeat(Sound());
             beat = changeFreqOfPitch(beat);
@@ -127,7 +60,6 @@ Composition::create_initial_solution() const
         }
         music.add_bar(bar);
     }
-
     return music;
 }
 
@@ -231,68 +163,6 @@ Composition::beatFitness( const Music& music ) const
     }
     return fitness;
 }
-
-/*
-double Composition::evaluate_fitness_value(Music* music) const
-{
-    double value = 0;
-	int avg_frequency[48] = {0} ,kind_of_duration[48] = {0};
-    // calculate the fitness value of this Music
-	for(int i = 0;i < music[0].num_bar();++i){
-		for(int j = 0;j < music[0][i].num_beat();++j){
-			int total_duration = 0;
-			for(int k = 0;k < music[0][i][j].num_sound();++k){
-				if(music[0][i][j][k].frequency() != 0){
-				avg_frequency[i * 4 + j] += music[0][i][j][k].frequency() * music[0][i][j][k].duration();
-				total_duration += music[0][i][j][k].duration();
-				}
-			}
-			if(total_duration != 0){avg_frequency[i * 4 + j] /= total_duration;}
-			if(music[0][i][j][0].duration() == 333){kind_of_duration[i * 4 + j] = 1;}
-			else if(music[0][i][j][0].duration() == 750){kind_of_duration[i * 4 + j] = 2;}
-			else if(music[0][i][j][0].duration() == 250){kind_of_duration[i * 4 + j] = 4;}
-			else{
-				if(music[0][i][j][1].duration() == 166){kind_of_duration[i * 4 + j] = 3;}
-				else{kind_of_duration[i * 4 + j] = 5;}
-			}
-		}
-	}
-	for(int i = 0;i < 12 * 4 - 2;++i){
-		if(avg_frequency[i] != avg_frequency[i + 1]){value++;}
-		if(avg_frequency[i] != avg_frequency[i + 2]){value++;}
-		if(kind_of_duration[i] != kind_of_duration[i + 1]){value++;}
-		if(kind_of_duration[i] != kind_of_duration[i + 2]){value++;}
-	}
-
-	for(int i = 0;i < 12 * 4 - 1;++i){
-		float x = music[0][i / 4][i % 4][0].frequency() ,y = music[0][i / 4][i % 4][0].frequency();
-		for(int j = 0;j < music[0][i / 4][i % 4].num_sound();++j){
-			if(y != music[0][i / 4][i % 4][j].frequency() && music[0][i / 4][i % 4][j].frequency() != 0){
-				y = music[0][i / 4][i % 4][j].frequency();
-				break;
-			}
-		}
-		if(x == y){
-			for(int j = 0;j < music[0][(i + 1) / 4][(i + 1) % 4].num_sound();++j){
-				if(y != music[0][(i + 1) / 4][(i + 1) % 4][j].frequency()
-					&& music[0][(i + 1) / 4][(i + 1) % 4][j].frequency() != 0){
-					y = music[0][(i + 1) / 4][(i + 1) % 4][j].frequency();
-					break;
-				}
-			}
-			if(x == y){value -= -10000;}
-		}
-	}
-
-
-    music->set_fitness_value(value);
-    return value;
-}
-*/
-
-/**
- *  All operations below are related to Composition
- */
 
 Beat
 Composition::changePatternOfBeat(const Sound& sound) const
