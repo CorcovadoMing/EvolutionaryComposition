@@ -125,9 +125,9 @@ const int dur2num( const int& duration )
     vector<int> durationCollection = {333, 334, 666, 1000};
     vector<int> notetime = {12, 12, 6, 4};
 
-    for( auto i : durationCollection )
+    for( auto i = 0; i < durationCollection.size(); i++ )
     {
-        if( i == duration )
+        if( duration == durationCollection[i] )
             return notetime[i];
     }
     return 0;
@@ -147,9 +147,9 @@ const std::string note2name( const double& frequency )
     "a5", "bb5", "b5", "c5", "c#5", "d5", "d#5", "e5", "f5", "gb5", "g5", "ab5", "a6", 
     "bb6", "b6", "c6", "c#6", "d6", "d#6", "e6", "f6", "gb6", "g6" };
 
-    for( auto i : frequencyCollection )
+    for( auto i = 0; i < frequencyCollection.size(); i++ )
     {
-        if( frequency == i )
+        if( frequency == frequencyCollection[i] )
             return notename[i];
     }
     return restnote;

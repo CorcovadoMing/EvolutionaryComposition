@@ -9,3 +9,5 @@
 ./handler/pypy/bin/pypy -O ./handler/generatewave4.py
 
 python2 -O ./handler/combine.py
+
+rm 1.wav 2.wav 3.wav 4.wav ./handler/generatewave*

@@ -28,12 +28,11 @@ const std::vector<double> Composition::G_LICK =
     2637.0, 2793.8, 3136.0};
 
 const std::vector< std::vector<Sound> > Composition::pattern_of_beat =
-    {
-        {Sound(Sound::STD_FREQ_PITCH, 333),
-         Sound(Sound::STD_FREQ_PITCH, 333), Sound(Sound::STD_FREQ_PITCH, 334)},
-        {Sound(Sound::STD_FREQ_PITCH, 750), Sound(Sound::STD_FREQ_PITCH, 250)},
-        {Sound(Sound::STD_FREQ_PITCH, 1000)}
-    };
+{
+    {Sound(Sound::STD_FREQ_PITCH, 333),Sound(Sound::STD_FREQ_PITCH, 333), Sound(Sound::STD_FREQ_PITCH, 334)},
+    {Sound(Sound::STD_FREQ_PITCH, 666), Sound(Sound::STD_FREQ_PITCH, 334)},
+    {Sound(Sound::STD_FREQ_PITCH, 1000)}
+};
 
 
 bool isIn( const double& elem, const std::vector<double>& list )
