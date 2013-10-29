@@ -4,65 +4,64 @@
 #include "HelperFunction.h"
 using namespace std;
 
-//paras
-int beats_per_bar = 4,
-    note_value = 4,
-    total_num_bar = 12,
-    tempo = 120;
-const int population_size = 4;
-const unsigned int max_generation = 1000;
-const double crossover_rate = 0.5;
-const double mutation_rate = 0.1;
-const int index_elitism_individual = -1;
+//Parameters of Music
+const int Beat_Per_Bar = 4,
+          Note_Value = 4,
+          Total_Num_Bar = 12,
+          Tempo = 120;
+          
+//Parameters of Genetic ALgorithm
+const int Population_Size = 4;
+const unsigned int Max_Generation = 1000;
+const double Crossover_Rate = 0.5;
+const double Mutation_Rate = 0.1;
+const int Index_Elitism_Individual = -1;
 
+bool isMusicFileExist(const string&);
 void readMusicFileOrNewAlgorithm(const string&);
 void tryReadFremExistMusicFile(const string&);
 void newMainAlgorithm();
 
-GeneticAlgorithm algo;
+GeneticAlgorithm Main_Genetic_Algorithm;
 
 int main(int argc, char *argv[])
 {
     const string music_file_name = "Music";
-    
     readMusicFileOrNewAlgorithm(music_file_name);
-    algo.run();
-    outputToFile(music_file_name, algo);
-    writeToPy(algo);
+    Main_Genetic_Algorithm.run();
+    outputToFile(music_file_name);
+    writeToPy();
     return EXIT_SUCCESS;
+}
+
+bool isMusicFileExist(const string& music_file_name)
+{
+    ifstream ifs(music_file_name.c_str());
+    if(ifs.is_open()){ ifs.close(); return true;} 
+    else return false;
 }
 
 void readMusicFileOrNewAlgorithm(const string& music_file_name)
 {
-    std::ifstream ifs(music_file_name.c_str());
-    if (ifs.is_open())
-    {
-        ifs.close(); 
-        tryReadFremExistMusicFile(music_file_name);
-    } 
-    else 
-    {
-        newMainAlgorithm();
-    }
+    isMusicFileExist(music_file_name) ?
+    tryReadFremExistMusicFile(music_file_name) : newMainAlgorithm();
 }
 
 void tryReadFremExistMusicFile(const string& music_file_name)
 {
-    readFromFile(algo, music_file_name);
-    algo.set_max_generation(max_generation);
-    algo.set_crossover_rate(crossover_rate);
-    algo.set_mutation_rate(mutation_rate);
-    algo.set_index_elitism_individual(index_elitism_individual);
+    readFromFile(music_file_name);
+    Main_Genetic_Algorithm.setMaxGeneration(Max_Generation);
+    Main_Genetic_Algorithm.setCrossoverRate(Crossover_Rate);
+    Main_Genetic_Algorithm.setMutationRate(Mutation_Rate);
+    Main_Genetic_Algorithm.setIndexElitismIndividual(Index_Elitism_Individual);
 }
 
 void newMainAlgorithm() 
 {
-    Composition problem(beats_per_bar, note_value, total_num_bar, tempo);
-
-    algo = GeneticAlgorithm(problem, population_size, max_generation,
-                            crossover_rate, mutation_rate,
-                            index_elitism_individual);
-
+    Composition problem(Beat_Per_Bar, Note_Value, Total_Num_Bar, Tempo);
+    Main_Genetic_Algorithm = GeneticAlgorithm(problem, Population_Size, Max_Generation,
+                            Crossover_Rate, Mutation_Rate,
+                            Index_Elitism_Individual);
 }
 
 

@@ -1,25 +1,24 @@
-#include <cstdlib>
-#include <cstddef>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <vector>
-#include <cstdarg>
-#include <cstdio>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
 #include "Helperfunction.h"
-
 using namespace std;
+extern GeneticAlgorithm Main_Genetic_Algorithm;
 
-void readFromFile(GeneticAlgorithm& algo, const std::string& file_name)
+void gPyHeader(FILE *, const int&);
+void gPyBody(FILE *, const double&, const double&);
+void gPyFooter(FILE *, const int&);
+
+void readFromFile(const string& file_name)
 {
-    std::ifstream ifs(file_name.c_str());
+    ifstream ifs(file_name.c_str());
     if (ifs.is_open()) 
     {
         Composition problem = Composition::input_from(ifs);
-
-        std::vector<Music> population;
+        vector<Music> population;
         while (ifs.good()) 
         {
             Music music;
@@ -28,67 +27,56 @@ void readFromFile(GeneticAlgorithm& algo, const std::string& file_name)
                 population.push_back(music);
             }
         }
-        algo = GeneticAlgorithm(problem, population);
+        Main_Genetic_Algorithm = GeneticAlgorithm(problem, population);
     }
     else
     { 
-        std::cout << "The input file can not be read." << std::endl;
+        cout << "The input file can not be read." << endl;
     }
 }
 
-void outputToFile(const std::string& file_name, const GeneticAlgorithm& algo)
+void outputToFile(const string& file_name)
 {
-    std::ofstream ofs(file_name.c_str());
+    ofstream ofs(file_name.c_str());
     if (ofs.is_open()) {
-        Composition problem = algo.problem();
+        Composition problem = Main_Genetic_Algorithm.problem();
 
         // output the information of problem
         Composition::output_to(ofs, problem);
 
         // output each Music
-        unsigned int population_size = algo.population_size();
+        unsigned int population_size = Main_Genetic_Algorithm.population_size();
         for (unsigned int idx = 0; idx < population_size; ++idx) {
-            Music::output_to(ofs, algo.individual(idx));
+            Music::output_to(ofs, Main_Genetic_Algorithm.individual(idx));
         }
     }
     else {
-        std::cout << "The onput file can not be written." << std::endl;
+        cout << "The onput file can not be written." << endl;
     }
 }
 
-void writeToPy(const GeneticAlgorithm& algo)
+void writeToPy()
 {
-    const std::string filehead = "./handler/generatewave";
-    const std::string filetype = ".py";
-    int nfile;
+    const string filehead = "./handler/generatewave"; 
+    const string filetype = ".py";
+    const int population_size = Main_Genetic_Algorithm.population_size();
     FILE *fp;
-    const int population_size = algo.population_size();
-
+    
     for (int idx = 0; idx < population_size; ++idx)
     {
-        nfile = idx + 1;
-        std::string filename = filehead + int2str(nfile) + filetype;
+        string filename = filehead + int2str(idx+1) + filetype;
         fp = fopen(filename.c_str(), "w+");
-        Music music = algo.individual(idx);
-
-        //python script header generate
-        gPyHeader(fp, algo.problem().TEMPO);
-        std::size_t num_bar = music.num_bar();
-        for (std::size_t idxMusic = 0; idxMusic < num_bar; ++idxMusic) {
-
-            std::size_t num_beat = music[idxMusic].num_beat();
-            for (std::size_t idxBar = 0; idxBar < num_beat; ++idxBar) {
-
-                std::size_t num_sound = music[idxMusic][idxBar].num_sound();
-                for (std::size_t idxBeat = 0; idxBeat < num_sound; ++idxBeat) {
-                    gPyBody(fp,
-                        music[idxMusic][idxBar][idxBeat].frequency(),
-                        music[idxMusic][idxBar][idxBeat].duration());
+        Music music = Main_Genetic_Algorithm.individual(idx);
+        gPyHeader(fp, Main_Genetic_Algorithm.problem().TEMPO);
+        for (auto idxMusic = 0; idxMusic < music.num_bar(); ++idxMusic) {
+            for (auto idxBar = 0; idxBar < music[idxMusic].num_beat(); ++idxBar) {
+                for (auto idxBeat = 0; idxBeat < music[idxMusic][idxBar].num_sound(); ++idxBeat) {
+                    gPyBody(fp, music[idxMusic][idxBar][idxBeat].frequency(),
+                                music[idxMusic][idxBar][idxBeat].duration());
                 }
             }
         }
-        //python script footer generate
-        gPyFooter(fp, nfile);
+        gPyFooter(fp, idx+1);
         fclose(fp);
     }
 }
@@ -111,11 +99,11 @@ void gPyFooter(FILE *fp, const int& fn)
     fprintf(fp, "pysynth.make_wav(song, pause = 0,fn = '%d.wav')\n", fn);
 }
 
-std::string int2str(const int &i)
+const string int2str(const int &inputInt)
 {
-    std::stringstream stream;
-    stream << i;
-    return stream.str();
+    stringstream sstream;
+    sstream << inputInt;
+    return sstream.str();
 }
 
 const int dur2num( const int& duration )
@@ -132,7 +120,7 @@ const int dur2num( const int& duration )
 }
 
 
-const std::string note2name( const double& frequency )
+const string note2name( const double& frequency )
 {
     const string restnote = "r";
     vector<double> frequencyCollection = {261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0,

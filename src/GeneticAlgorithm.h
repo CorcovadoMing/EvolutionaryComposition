@@ -22,10 +22,14 @@ public:
 
     void run();
     
-    void set_max_generation(unsigned int max_generation);
-    void set_crossover_rate(double crossover_rate);
-    void set_mutation_rate(double mutation_rate);
-    void set_index_elitism_individual(int index_elitism_individual);
+    void setMaxGeneration(unsigned int max_generation)
+        {max_generation_ = max_generation;}
+    void setCrossoverRate(double crossover_rate)
+        {crossover_rate_ = crossover_rate;}
+    void setMutationRate(double mutation_rate)
+        {mutation_rate_ = mutation_rate;}
+    void setIndexElitismIndividual(int index_elitism_individual)
+        {index_elitism_individual_ = index_elitism_individual;}
 
     const Composition& problem() const { return problem_; }
     unsigned int population_size() const { return population_size_; }
@@ -58,7 +62,6 @@ private:
                                  const std::vector<Music>& children) const;
 
     void repair();
-    void sort();
 };
 
 #endif // GENETICALGORITHM_H

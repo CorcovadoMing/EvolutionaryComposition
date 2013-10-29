@@ -56,30 +56,6 @@ GeneticAlgorithm::GeneticAlgorithm(const Composition& problem,
 }
 
 void
-GeneticAlgorithm::set_max_generation(unsigned int max_generation)
-{
-    max_generation_ = max_generation;
-}
-
-void
-GeneticAlgorithm::set_crossover_rate(double crossover_rate)
-{
-    crossover_rate_ = crossover_rate;
-}
-
-void
-GeneticAlgorithm::set_mutation_rate(double mutation_rate)
-{
-    mutation_rate_ = mutation_rate;
-}
-
-void
-GeneticAlgorithm::set_index_elitism_individual(int index_elitism_individual)
-{
-    index_elitism_individual_ = index_elitism_individual;
-}
-
-void
 GeneticAlgorithm::run()
 {
     // Create initial population if there is no any population
@@ -103,7 +79,6 @@ GeneticAlgorithm::run()
         std::cout << problem_.beatFitness(population_[3]) << std::endl;
 
         std::vector<Music> children = mutation(population_);
-        //sort();
         population_ = selection(population_, children);
         ++generation;
     }
@@ -267,19 +242,4 @@ GeneticAlgorithm::selection(const std::vector<Music>& parents,
     }
 
     return result;
-}
-
-void
-GeneticAlgorithm::sort(){
-	int i = 0 ,j = 0;
-	Music m;
-	for (i = 1;i < population_.size();i++){
-		m = population_[i];
-		j = i - 1;
-		while (j >= 0 && population_[j].fitness_value() < m.fitness_value()){
-			population_[j + 1] = population_[j];
-			j--;
-		}
-		population_[j + 1] = m;
-	}
 }
