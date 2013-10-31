@@ -6,8 +6,8 @@
 
 Todo:
 
-1. Re-design structure
-2. use more pattern to evolve 
+1. *[Doing]* Re-design structure
+2. *[Doing]* Use more pattern to evolve 
 3. Data analysis, ploting GUI interface
 
 ======
