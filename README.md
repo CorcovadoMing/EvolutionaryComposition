@@ -2,7 +2,7 @@
 =======================
 
 ###Base on heuristic algorithem to generate 12-bars Blues
-######it's is *experimen* to run.
+######it's *experimen* to run.
 
 Todo:
 
