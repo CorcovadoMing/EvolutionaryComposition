@@ -4,7 +4,28 @@
 ###Base on heuristic algorithem to generate 12-bars Blues
 ######it's *experimen* to run.
 
-Todo:
+======
+
+###Usage:
+
+```
+make
+```
+to compiler all file
+
+```
+make evol
+```
+to do a run of evolution
+
+```
+make clean
+```
+to clean up all file generated, include the result of evolution
+
+======
+
+###Todo:
 
 1. *[Doing]* Re-design structure
 2. *[Doing]* Use more pattern to evolve 
