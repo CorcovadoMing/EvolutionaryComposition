@@ -1,3 +1,0 @@
-#!/bin/bash
-
-g++ -O2 -std=c++11 ./src/Sound.cpp ./src/Beat.cpp ./src/Bar.cpp ./src/Music.cpp ./src/Composition.cpp ./src/GeneticAlgorithm.cpp ./src/HelperFunction.cpp ./src/main.cpp -o ./handler/main
