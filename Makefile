@@ -1,7 +1,7 @@
-all: ./src/main.cpp
+all:
 	@echo "====== Compile phase ====== "
 	@echo "Compiling ... "
-	@g++ -O2 -std=c++11 ./src/Sound.cpp ./src/Beat.cpp ./src/Bar.cpp ./src/Music.cpp ./src/Composition.cpp ./src/GeneticAlgorithm.cpp ./src/HelperFunction.cpp ./src/main.cpp -o ./handler/main
+	@g++ -O2 -std=c++11 ./src/*.cpp -o ./handler/main
 	@echo "Compiling ...OK! "
 	
 	@echo "====== Runing phase====== "
