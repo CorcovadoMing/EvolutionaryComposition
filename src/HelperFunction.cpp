@@ -4,7 +4,7 @@
 #include <vector>
 #include "Composition.h"
 #include "GeneticAlgorithm.h"
-#include "Helperfunction.h"
+#include "HelperFunction.h"
 using namespace std;
 extern GeneticAlgorithm Main_Genetic_Algorithm;
 

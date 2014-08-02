@@ -1,13 +1,14 @@
 CXX=g++
 OFLAGS=-O3 -std=c++11
 WD=src
-INC=-B /$(WD)
+INC=-I/$(WD)
 OD=handler
 PYPY=$(OD)/pypy/bin/pypy
 
 all:
 	@echo "====== Compile phase ====== "
 	@echo "Compiling ... "
+	ls $(WD);
 	$(CXX) $(INC) $(OFLAGS) $(WD)/*.cpp -o $(OD)/main
 	@echo "Compiling ...OK! "
 	
