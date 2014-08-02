@@ -1,7 +1,7 @@
 CXX=g++
 OFLAGS=-O3 -std=c++11
 WD=src
-INC=-I/$(WD)
+INC=-B /$(WD)
 OD=handler
 PYPY=$(OD)/pypy/bin/pypy
 
