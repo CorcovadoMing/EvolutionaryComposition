@@ -7,7 +7,7 @@ PYPY=$(OD)/pypy/bin/pypy
 all:
 	@echo "====== Compile phase ====== "
 	@echo "Compiling ... "
-	$(CXX) $(OFLAGS) $(WD)/*.cpp -o $(OD)/main
+	@$(CXX) $(OFLAGS) $(WD)/*.cpp -o $(OD)/main
 	@echo "Compiling ...OK! "
 	
 	@echo "====== Runing phase====== "
@@ -26,7 +26,13 @@ all:
 	@echo "Synthesizing ... "
 	@python -O $(OD)/combine.py
 	@echo "OK!"
-	
+
+test:
+	@echo "====== Compile phase ====== "
+	@echo "Compiling ... "
+	@$(CXX) $(OFLAGS) $(WD)/*.cpp -o $(OD)/main
+	@echo "Compiling ...OK! "
+
 evol:
 	@echo "Evolution start ..."
 	@./$(OD)/main >> report
