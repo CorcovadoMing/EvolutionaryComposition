@@ -1,5 +1,5 @@
 #EvolutionaryComposition
-[![Build Status](https://travis-ci.org/[CorcovadoMing]/[EvolutionaryComposition].png)](https://travis-ci.org/[CorcovadoMing]/[EvolutionaryComposition])
+[![Build Status](https://travis-ci.org/CorcovadoMing/EvolutionaryComposition.png)](https://travis-ci.org/CorcovadoMing/EvolutionaryComposition)
 =======================
 
 ###Base on heuristic algorithem to generate 12-bars Blues
