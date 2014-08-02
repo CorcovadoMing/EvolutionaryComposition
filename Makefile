@@ -1,33 +1,39 @@
+CXX=g++
+OFLAGS=-O3 -std=c++11
+WD=src
+OD=handler
+PYPY=$(OD)/pypy/bin/pypy
+
 all:
 	@echo "====== Compile phase ====== "
 	@echo "Compiling ... "
-	@g++ -O2 -std=c++11 ./src/*.cpp -o ./handler/main
+	$(CXX) $(OFLAGS) $(WD)/*.cpp -o $(OD)/main
 	@echo "Compiling ...OK! "
 	
 	@echo "====== Runing phase====== "
 	@echo "Runing ... "
 	@echo "Fist Evolution start ..."
-	@./handler/main >> report
+	@./$(OD)/main >> report
 	@echo "Write to report file ..."
 	@echo "Done!"
 	
 	@echo "Generateing ... "
-	@./handler/pypy/bin/pypy -O ./handler/generatewave1.py
-	@./handler/pypy/bin/pypy -O ./handler/generatewave2.py
-	@./handler/pypy/bin/pypy -O ./handler/generatewave3.py
-	@./handler/pypy/bin/pypy -O ./handler/generatewave4.py
+	@$(PYPY) -O $(OD)/generatewave1.py
+	@$(PYPY) -O $(OD)/generatewave2.py
+	@$(PYPY) -O $(OD)/generatewave3.py
+	@$(PYPY) -O $(OD)/generatewave4.py
 	
 	@echo "Synthesizing ... "
-	@python2 -O ./handler/combine.py
+	@python -O $(OD)/combine.py
 	@echo "OK!"
 	
 evol:
 	@echo "Evolution start ..."
-	@./handler/main >> report
+	@./$(OD)/main >> report
 	@echo "Write to report file ..."
 	@echo "Done!"
 	
 clean:
 	@echo "======= Cleaning ======"
-	@rm *.wav ./handler/generatewave* ./handler/main report Music
+	@rm *.wav $(OD)/generatewave* $(OD)/main report Music
 	@echo "Done!"
