@@ -1,28 +1,27 @@
 #EvolutionaryComposition
-[![Build Status](https://travis-ci.org/CorcovadoMing/EvolutionaryComposition.png)](https://travis-ci.org/CorcovadoMing/EvolutionaryComposition)
 =======================
+[![Build Status](https://travis-ci.org/CorcovadoMing/EvolutionaryComposition.png)](https://travis-ci.org/CorcovadoMing/EvolutionaryComposition)
 
 ###Base on heuristic algorithem to generate 12-bars Blues
-######it's *experimen* to run.
 
 ======
 
 ###Usage:
 
+####Run:
 ```
 make
 ```
-to compiler all file
 
+####Evolution:
 ```
 make evol
 ```
-to do a run of evolution
 
+####Clean up:
 ```
 make clean
 ```
-to clean up all file generated, include the result of evolution
 
 ======
 
