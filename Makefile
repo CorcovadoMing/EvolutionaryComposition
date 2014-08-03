@@ -32,5 +32,7 @@ evol:
 	
 clean:
 	@echo "======= Cleaning ======"
-	@rm *.wav $(OD)/generatewave* $(OD)/main report Music
+	@cd $(OD); make clean;
+	@rm *.wav report Music
+	@cd $(OD); rm -r generatewave* cmake* CMake* Makefile
 	@echo "Done!"
