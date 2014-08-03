@@ -18,10 +18,10 @@ all:
 	@echo "Done!"
 	
 	@echo "Generateing ... "
-	@./$(PYPY) -O $(OD)/generatewave1.py
-	@./$(PYPY) -O $(OD)/generatewave2.py
-	@./$(PYPY) -O $(OD)/generatewave3.py
-	@./$(PYPY) -O $(OD)/generatewave4.py
+	@python -O $(OD)/generatewave1.py
+	@python -O $(OD)/generatewave2.py
+	@python -O $(OD)/generatewave3.py
+	@python -O $(OD)/generatewave4.py
 	
 	@echo "Synthesizing ... "
 	@python -O $(OD)/combine.py
