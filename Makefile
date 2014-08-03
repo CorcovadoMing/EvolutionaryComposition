@@ -1,13 +1,10 @@
-CXX=g++
-OFLAGS=-O3 -std=c++11
-WD=src
 OD=handler
-PYPY=$(OD)/pypy/bin/pypy
+PY=python -O
 
 all:
 	@echo "====== Compile phase ====== "
 	@echo "Compiling ... "
-	@$(CXX) $(OFLAGS) $(WD)/*.cpp -o $(OD)/main
+	@cd $(OD); cmake ../src; make
 	@echo "Compiling ...OK! "
 	
 	@echo "====== Runing phase====== "
@@ -18,20 +15,14 @@ all:
 	@echo "Done!"
 	
 	@echo "Generateing ... "
-	@python -O $(OD)/generatewave1.py
-	@python -O $(OD)/generatewave2.py
-	@python -O $(OD)/generatewave3.py
-	@python -O $(OD)/generatewave4.py
+	@$(PY) $(OD)/generatewave1.py
+	@$(PY) $(OD)/generatewave2.py
+	@$(PY) $(OD)/generatewave3.py
+	@$(PY) $(OD)/generatewave4.py
 	
 	@echo "Synthesizing ... "
-	@python -O $(OD)/combine.py
+	@$(PY) $(OD)/combine.py
 	@echo "OK!"
-
-test:
-	@echo "====== Compile phase ====== "
-	@echo "Compiling ... "
-	@$(CXX) $(OFLAGS) $(WD)/*.cpp -o $(OD)/main
-	@echo "Compiling ...OK! "
 
 evol:
 	@echo "Evolution start ..."

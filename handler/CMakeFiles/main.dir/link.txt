@@ -1,0 +1,1 @@
+/usr/bin/c++    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/main.dir/Bar.cpp.o CMakeFiles/main.dir/Beat.cpp.o CMakeFiles/main.dir/Composition.cpp.o CMakeFiles/main.dir/GeneticAlgorithm.cpp.o CMakeFiles/main.dir/HelperFunction.cpp.o CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/Music.cpp.o CMakeFiles/main.dir/Sound.cpp.o  -o main  
